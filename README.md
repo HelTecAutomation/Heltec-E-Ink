@@ -7,8 +7,8 @@
 # The Overview
 --------
 - Arduino library for E-Ink display(1.54, 2.3, 2.9) made by HelTec Automation(TM)
-- This library allows three sizes of e-ink to run on the Arduino development board.
-- You may need change some definition in "e-ink.h" ...
+- Now this library allows three sizes of e-ink to run on the "Arduino UNO" , "Wifi_kit32" , "Wifi_kit8" development board.
+- You may need change some definition in "imagedata.h" ...re:USE_ESP32
 # Installing
 ----------
 To install this library:
