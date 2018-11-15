@@ -1,6 +1,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "fonts.h"
+#include "imagedata.h"
+
+#if defined( USE_ESP32 )
+#include <pgmspace.h>
+#elif defined( USE_ESP8266 )
+#include <pgmspace.h>
+#elif defined( USE_UNO )
 #include <avr/pgmspace.h>
+#endif
 
 // Character bitmaps for Courier New 15pt
 const uint8_t Font20_Table[] PROGMEM = 

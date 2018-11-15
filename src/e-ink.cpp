@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "e-ink.h"
-
+#include "imagedata.h"
 
 #if defined(  USE_154  )
 Epd::~Epd() {
@@ -10,6 +10,7 @@ Epd::Epd() {
     reset_pin = RST_PIN;
     dc_pin = DC_PIN;
     cs_pin = CS_PIN;
+    busy_pin = BUSY_PIN;
     width = EPD_WIDTH;
     height = EPD_HEIGHT;
 };
@@ -243,8 +244,10 @@ Epd::~Epd() {
 };
 
 Epd::Epd() {
+    reset_pin = RST_PIN;
     dc_pin = DC_PIN;
     cs_pin = CS_PIN;
+    busy_pin = BUSY_PIN;
     width = EPD_WIDTH;
     height = EPD_HEIGHT;
 };
@@ -443,6 +446,7 @@ Epd::Epd() {
     reset_pin = RST_PIN;
     dc_pin = DC_PIN;
     cs_pin = CS_PIN;
+    busy_pin=BUSY_PIN;
     width = EPD_WIDTH;
     height = EPD_HEIGHT;
 };
@@ -508,6 +512,8 @@ void Epd::Reset(void) {
 /**
  *  @brief: set the look-up table register
  */
+
+
 void Epd::SetLut(const unsigned char* lut) {
     this->lut = lut;
     SendCommand(WRITE_LUT_REGISTER);

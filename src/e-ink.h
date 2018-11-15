@@ -1,11 +1,10 @@
 #ifndef E_INK_H
 #define E_INK_H
 #include "epdif.h"
+#include "imagedata.h"
 
-#define  USE_290
 
 #if defined(  USE_154  )
-
 // Display resolution
 #define EPD_WIDTH       200
 #define EPD_HEIGHT      200
@@ -137,6 +136,8 @@ public:
 private:
     unsigned int dc_pin;
     unsigned int cs_pin;
+    unsigned int reset_pin;
+    unsigned int busy_pin;
 };
 
 
@@ -199,8 +200,11 @@ private:
     unsigned int reset_pin;
     unsigned int dc_pin;
     unsigned int cs_pin;
+    unsigned int busy_pin;
     const unsigned char* lut;
 
+    void setPins(unsigned int ss,unsigned int reset);
+    void setSPIFrequency(uint32_t frequency);
     void SetLut(const unsigned char* lut);
     void SetMemoryArea(int x_start, int y_start, int x_end, int y_end);
     void SetMemoryPointer(int x, int y);

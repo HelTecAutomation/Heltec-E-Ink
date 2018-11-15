@@ -1,5 +1,14 @@
-#include <avr/pgmspace.h>
 #include "e-ink-display.h"
+#include "imagedata.h"
+
+#if defined( USE_ESP32 )
+#include <pgmspace.h>
+#elif defined( USE_ESP8266 )
+#include <pgmspace.h>
+#elif defined( USE_UNO )
+#include <avr/pgmspace.h>
+#endif
+
 
 Paint::Paint(unsigned char* image, int width, int height) {
     this->rotate = ROTATE_0;
@@ -147,7 +156,7 @@ void Paint::DrawStringAt(int x, int y, const char* text, sFONT* font, int colore
     /* Send the string character by character on EPD */
     while (*p_text != 0) {
         /* Display one character on EPD */
-        DrawCharAt(refcolumn, y, *p_text, font, colored);
+       //DrawCharAt(refcolumn, y, *p_text, font, colored);
         /* Decrement the column position by 16 */
         refcolumn += font->Width;
         /* Point on the next character */
@@ -155,6 +164,7 @@ void Paint::DrawStringAt(int x, int y, const char* text, sFONT* font, int colore
         counter++;
     }
 }
+
 
 /**
 *  @brief: this draws a line on the frame buffer

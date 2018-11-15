@@ -21,22 +21,21 @@ Epd epd;
 void setup() {
 
   Serial.begin(9600);
-
+  #if defined( USE_ESP32 )
+  SPI.begin(SCK,MISO,MOSI,SS);
+  #elif defined( USE_ESP8266 )
+  SPI.pins(SCK,MISO,MOSI,SS);
+  SPI.begin();
+  #endif
   if (epd.Init(lut_full_update) != 0) {
       Serial.print("e-Paper init failed");
       return;
   }
-
   epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
   epd.DisplayFrame();
   epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
   epd.DisplayFrame();
-
-    if (epd.Init(lut_full_update) != 0) {
-      Serial.print("e-Paper init failed");
-      return;
-  }
-
+  delay(1000);
 
 
   paint.SetWidth(30);
@@ -48,13 +47,11 @@ void setup() {
   epd.DisplayFrame();
   delay(1000);
 
-
   epd.SetFrameMemory(IMAGE_DATA2);
   epd.DisplayFrame();
   epd.SetFrameMemory(IMAGE_DATA2);
   epd.DisplayFrame();
   delay(2000);
-
 
   epd.SetFrameMemory(IMAGE_DATA);
   epd.DisplayFrame();
@@ -73,37 +70,47 @@ void setup() {
   epd.SetFrameMemory(IMAGE_DATA1);
   epd.DisplayFrame();
 
+
+    if (epd.Init(lut_full_update) != 0) {
+      Serial.print("e-Paper init failed");
+      return;
+  }
 
 
 }
 
 void loop()
 {
+  //paint.SetWidth(30);           /*设置区域的大小*/
+  //paint.SetHeight(170);
+  //paint.SetRotate(ROTATE_270); /*旋转文字的方向*/
 
-  paint.SetWidth(30);           /*设置区域的大小*/
-  paint.SetHeight(170);
-  paint.SetRotate(ROTATE_270); /*旋转文字的方向*/
+  //paint.Clear(COLORED);          /*将区域显示为黑色*/
+  //paint.DrawStringAt(20,8, "E-INK-1.54", &Font20, UNCOLORED);
+ // epd.SetFrameMemory(paint.GetImage(), 30, 15, paint.GetWidth(), paint.GetHeight());     /*设置区域的位置*/
+  //epd.DisplayFrame();
+  //delay(1000);
 
-  paint.Clear(COLORED);          /*将区域显示为黑色*/
-  paint.DrawStringAt(20,8, "E-INK-1.54", &Font20, UNCOLORED);
-  epd.SetFrameMemory(paint.GetImage(), 30, 15, paint.GetWidth(), paint.GetHeight());     /*设置区域的位置*/
-  epd.DisplayFrame();
-  delay(1000);
 }
+
 #elif defined( USE_213 )
 
   Epd epd;
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
-
-
+  #if defined( USE_ESP32 )
+  SPI.begin(SCK,MISO,MOSI,SS);
+  #elif defined( USE_ESP8266 )
+  SPI.pins(SCK,MISO,MOSI,SS);
+  SPI.begin();
+  #endif
   if (epd.Init() != 0) {
     Serial.print("e-Paper init failed");
     return;
   }
-  epd.ClearFrame();
-epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
+
+   epd.ClearFrame();
+   epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
 
 /*
   paint.Clear(COLORED);
@@ -125,38 +132,48 @@ Epd epd;
 
 void setup() {
   Serial.begin(9600);
-  if (epd.Init(lut_full_update) != 0)
+  #if defined( USE_ESP32 )
+  SPI.begin(SCK,MISO,MOSI,SS);
+  #elif defined( USE_ESP8266 )
+  SPI.pins(SCK,MISO,MOSI,SS);
+  SPI.begin();
+  #endif
+   if (epd.Init(lut_full_update) != 0)
   {
       Serial.print("e-Paper init failed");
       return;
   }
-
   epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
   epd.DisplayFrame();
   epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
   epd.DisplayFrame();
   delay(2000);
 
-  if (epd.Init(lut_partial_update) != 0) {
+  epd.SetFrameMemory(IMAGE);
+  epd.DisplayFrame();
+  epd.SetFrameMemory(IMAGE);
+  epd.DisplayFrame();
+  delay(1000);
+  
+      if (epd.Init(lut_partial_update) != 0) {
       Serial.print("e-Paper init failed");
       return;
   }
 }
 
 void loop() {
-  epd.SetFrameMemory(IMAGE);
-  epd.DisplayFrame();
-  epd.SetFrameMemory(IMAGE);
-  epd.DisplayFrame();
-  delay(1000);
 
-  paint.SetWidth(24);   /*设置区域的大小*/
-  paint.SetHeight(128);
-  paint.SetRotate(ROTATE_270);   /*旋转文字的方向*/
-  paint.Clear(COLORED);          /*将区域显示为黑色*/
-  paint.DrawStringAt(10,8, "E-INK-2.90", &Font16, UNCOLORED);     /*设置文字的位置*/
-  epd.SetFrameMemory(paint.GetImage(), 50,90, paint.GetWidth(), paint.GetHeight());    /*设置区域的位置*/
-  epd.DisplayFrame();
-  delay(1000);
+  
+
+
+ //paint.SetWidth(24);   /*设置区域的大小*/
+ // paint.SetHeight(128);
+  //paint.SetRotate(ROTATE_270);   /*旋转文字的方向*/
+ // paint.Clear(COLORED);          /*将区域显示为黑色*/
+ // paint.DrawStringAt(10,8, "E-INK-2.90", &Font16, UNCOLORED);     /*设置文字的位置*/
+  //epd.SetFrameMemory(paint.GetImage(), 50,90, paint.GetWidth(), paint.GetHeight());    /*设置区域的位置*/
+ // epd.DisplayFrame();
+ // delay(1000);
 }
-#endif
+#endif 
+

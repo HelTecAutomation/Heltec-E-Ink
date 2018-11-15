@@ -1,5 +1,12 @@
 #include "imagedata.h"
+#include "epdif.h"
+#if defined( USE_ESP32 )
+#include <pgmspace.h>
+#elif defined( USE_ESP8266 )
+#include <pgmspace.h>
+#elif defined( USE_UNO )
 #include <avr/pgmspace.h>
+#endif
 
 const unsigned char IMAGE_DATA[] PROGMEM = {
 	/* 0X00,0X01,0XC8,0X00,0XC8,0X00, */

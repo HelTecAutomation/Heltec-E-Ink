@@ -1,3 +1,5 @@
+#define USE_ESP8266
+#define  USE_154
 
 extern const unsigned char IMAGE_DATA[];
 extern const unsigned char IMAGE_DATA1[];
