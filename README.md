@@ -8,7 +8,7 @@
 --------
 - Arduino library for E-Ink display(1.54, 2.3, 2.9) made by HelTec Automation(TM)
 - Now this library allows three sizes of e-ink to run on the "AVR" , "ESP32" , "ESP8266" development board.
-- You may need change some definition in "imagedata.h" ...re:USE_ESP32
+- **Display size definition in "imagedata.h"**.
 # Installing
 ----------
 To install this library:
