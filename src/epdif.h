@@ -5,19 +5,20 @@
 #include <SPI.h>
 #include "imagedata.h"
 
-#if defined( USE_ESP32 )
+#if defined( ESP32 )
 // Pin definition
 #define RST_PIN         16
 #define DC_PIN          22
 #define CS_PIN          18
 #define BUSY_PIN        23
 
-#elif defined( USE_UNO )
+#elif defined( AVR )
 #define RST_PIN         8
 #define DC_PIN          9
 #define CS_PIN          10
 #define BUSY_PIN        7
-#elif defined( USE_ESP8266)
+
+#elif defined( ESP8266)
 #define RST_PIN         16
 #define DC_PIN          4
 #define CS_PIN          15

@@ -7,14 +7,13 @@
 # The Overview
 --------
 - Arduino library for E-Ink display(1.54, 2.3, 2.9) made by HelTec Automation(TM)
-- Now this library allows three sizes of e-ink to run on the "Arduino UNO" , "Wifi_kit32" , "Wifi_kit8" development board.
+- Now this library allows three sizes of e-ink to run on the "AVR" , "ESP32" , "ESP8266" development board.
 - You may need change some definition in "imagedata.h" ...re:USE_ESP32
 # Installing
 ----------
 To install this library:
-- install it using the Arduino Library manager ("Sketch" -> "Include Library" -> "Manage Libraries..."), or
-- download a zipfile from github using the "Download ZIP" button and install it using the IDE ("Sketch" -> "Include Library" -> "Add .ZIP Library..."
-- clone this git repository into your sketchbook/libraries folder.
+- Download a zipfile from github using the "Download ZIP" button and install it using the IDE ("Sketch" -> "Include Library" -> "Add .ZIP Library..."
+- Clone this git repository into your sketchbook/libraries folder.
 
 For more info, see https://www.arduino.cc/en/Guide/Libraries
 # Features
@@ -25,11 +24,17 @@ For more info, see https://www.arduino.cc/en/Guide/Libraries
 - Can continue to display for more than half a year in the power-off state.
 # Test information
 ---------
-![](https://github.com/HelTecAutomation/e-ink/blob/master/1.54.jpg)
+![](img/1.54.jpg)
 
-![](https://github.com/HelTecAutomation/e-ink/blob/master/2.15.jpg)
 
-![](https://github.com/HelTecAutomation/e-ink/blob/master/2.90.jpg)
+
+![](img/2.13.jpg)
+
+
+
+![](img/2.90.jpg)
+
+
 - [e-ink1.54](https://item.taobao.com/item.htm?spm=a1z10.1-c.w14879002-17163498038.8.42ce1d6fDt0Gzk&id=559282775007)
 - [e-ink2.13](https://item.taobao.com/item.htm?spm=2013.1.20141001.1.e10141e6UV7eAD&id=559224018532&scm=1007.12144.95220.42296_0&pvid=27ced8e2-6b47-4b4a-a173-0d7e7e992eb3&utparam=%7B%22x_hestia_source%22%3A%2242296%22%2C%22x_object_type%22%3A%22item%22%2C%22x_mt%22%3A0%2C%22x_src%22%3A%2242296%22%2C%22x_pos%22%3A1%2C%22x_pvid%22%3A%2227ced8e2-6b47-4b4a-a173-0d7e7e992eb3%22%2C%22x_object_id%22%3A559224018532%7D)
 - [e-ink2.90](https://item.taobao.com/item.htm?spm=2013.1.20141001.2.e10141e6UV7eAD&id=559840859882&scm=1007.12144.95220.42296_0&pvid=27ced8e2-6b47-4b4a-a173-0d7e7e992eb3&utparam=%7B%22x_hestia_source%22%3A%2242296%22%2C%22x_object_type%22%3A%22item%22%2C%22x_mt%22%3A0%2C%22x_src%22%3A%2242296%22%2C%22x_pos%22%3A2%2C%22x_pvid%22%3A%2227ced8e2-6b47-4b4a-a173-0d7e7e992eb3%22%2C%22x_object_id%22%3A559840859882%7D)

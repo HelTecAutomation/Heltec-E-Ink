@@ -21,9 +21,10 @@ Epd epd;
 void setup() {
 
   Serial.begin(9600);
-  #if defined( USE_ESP32 )
+  #if defined( ESP32 )
   SPI.begin(SCK,MISO,MOSI,SS);
-  #elif defined( USE_ESP8266 )
+
+  #elif defined( ESP8266 )
   SPI.pins(SCK,MISO,MOSI,SS);
   SPI.begin();
   #endif
@@ -154,7 +155,7 @@ void setup() {
   epd.SetFrameMemory(IMAGE);
   epd.DisplayFrame();
   delay(1000);
-  
+
       if (epd.Init(lut_partial_update) != 0) {
       Serial.print("e-Paper init failed");
       return;
@@ -163,7 +164,7 @@ void setup() {
 
 void loop() {
 
-  
+
 
 
  //paint.SetWidth(24);   /*设置区域的大小*/
@@ -175,5 +176,4 @@ void loop() {
  // epd.DisplayFrame();
  // delay(1000);
 }
-#endif 
-
+#endif

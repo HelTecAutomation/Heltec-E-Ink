@@ -2,11 +2,11 @@
 #include "fonts.h"
 #include "imagedata.h"
 
-#if defined( USE_ESP32 )
+#if defined( ESP32 )
 #include <pgmspace.h>
-#elif defined( USE_ESP8266 )
+#elif defined( ESP8266 )
 #include <pgmspace.h>
-#elif defined( USE_UNO )
+#elif defined( AVR )
 #include <avr/pgmspace.h>
 
 #endif

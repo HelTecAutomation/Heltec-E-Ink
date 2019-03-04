@@ -1,4 +1,4 @@
-#define USE_UNO
+//#define USE_UNO
 //#define USE_ESP8266
 //#define USE_ESP32
 
