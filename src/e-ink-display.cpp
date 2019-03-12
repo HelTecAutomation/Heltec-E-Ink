@@ -6,7 +6,7 @@
 #elif defined( ESP8266 )
 #include <pgmspace.h>
 #elif defined( AVR )
-//#include <avr/pgmspace.h>
+#include <avr/pgmspace.h>
 #endif
 
 
