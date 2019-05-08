@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "e-ink.h"
+#include "e_ink.h"
 #include "imagedata.h"
 
 #if defined(  USE_154  )
@@ -60,6 +60,14 @@ void Epd::SendData(unsigned char data) {
     SpiTransfer(data);
 }
 
+/**
+ *  @brief: Wait until the busy_pin goes LOW
+ */
+void Epd::WaitUntilIdle(void) {
+    while(DigitalRead(busy_pin) == HIGH) {      //LOW: idle, HIGH: busy
+        DelayMs(100);
+    }      
+}
 
 /**
  *  @brief: module reset.
@@ -183,6 +191,7 @@ void Epd::DisplayFrame(void) {
     SendData(0xC4);
     SendCommand(MASTER_ACTIVATION);
     SendCommand(TERMINATE_FRAME_READ_WRITE);
+    WaitUntilIdle();
 }
 
 /**
@@ -210,6 +219,7 @@ void Epd::SetMemoryPointer(int x, int y) {
     SendCommand(SET_RAM_Y_ADDRESS_COUNTER);
     SendData(y & 0xFF);
     SendData((y >> 8) & 0xFF);
+    WaitUntilIdle();
 }
 
 /**
@@ -220,6 +230,7 @@ void Epd::SetMemoryPointer(int x, int y) {
  */
 void Epd::Sleep() {
     SendCommand(DEEP_SLEEP_MODE);
+    WaitUntilIdle();
 }
 
 const unsigned char lut_full_update[] =
@@ -237,6 +248,7 @@ const unsigned char lut_partial_update[] =
     0x00, 0x00, 0x00, 0x00, 0x13, 0x14, 0x44, 0x12, 
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+
 
 #elif defined(  USE_213  )
 

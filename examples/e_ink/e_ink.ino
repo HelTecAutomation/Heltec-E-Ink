@@ -5,8 +5,8 @@
   www.heltec.cn
   */
 #include <SPI.h>
-#include "e-ink.h"
-#include "e-ink-display.h"
+#include "e_ink.h"
+#include "e_ink_display.h"
 #include "imagedata.h"
 
 #define COLORED     0
@@ -66,31 +66,24 @@ void setup() {
   epd.DisplayFrame();
   delay(2000);
 
-  epd.SetFrameMemory(IMAGE_DATA1);
-  epd.DisplayFrame();
-  epd.SetFrameMemory(IMAGE_DATA1);
-  epd.DisplayFrame();
-
-
-    if (epd.Init(lut_full_update) != 0) {
-      Serial.print("e-Paper init failed");
-      return;
-  }
-
-
+//  epd.SetFrameMemory(IMAGE_DATA1);
+//  epd.DisplayFrame();
+//  epd.SetFrameMemory(IMAGE_DATA1);
+//  epd.DisplayFrame();
+  
 }
 
 void loop()
 {
-  //paint.SetWidth(30);           /*设置区域的大小*/
-  //paint.SetHeight(170);
-  //paint.SetRotate(ROTATE_270); /*旋转文字的方向*/
+  paint.SetWidth(30);           /*设置区域的大小*/
+  paint.SetHeight(170);
+  paint.SetRotate(ROTATE_270); /*旋转文字的方向*/
 
-  //paint.Clear(COLORED);          /*将区域显示为黑色*/
-  //paint.DrawStringAt(20,8, "E-INK-1.54", &Font20, UNCOLORED);
- // epd.SetFrameMemory(paint.GetImage(), 30, 15, paint.GetWidth(), paint.GetHeight());     /*设置区域的位置*/
-  //epd.DisplayFrame();
-  //delay(1000);
+  paint.Clear(COLORED);          /*将区域显示为黑色*/
+  paint.DrawStringAt(20,8, "E-INK-1.54", &Font20, UNCOLORED);
+  epd.SetFrameMemory(paint.GetImage(), 30, 15, paint.GetWidth(), paint.GetHeight());     /*设置区域的位置*/
+  epd.DisplayFrame();
+  delay(3000);
 
 }
 

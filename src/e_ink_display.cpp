@@ -1,4 +1,4 @@
-#include "e-ink-display.h"
+#include "e_ink_display.h"
 #include "imagedata.h"
 
 #if defined( ESP32 )
@@ -156,7 +156,7 @@ void Paint::DrawStringAt(int x, int y, const char* text, sFONT* font, int colore
     /* Send the string character by character on EPD */
     while (*p_text != 0) {
         /* Display one character on EPD */
-       //DrawCharAt(refcolumn, y, *p_text, font, colored);
+        DrawCharAt(refcolumn, y, *p_text, font, colored);
         /* Decrement the column position by 16 */
         refcolumn += font->Width;
         /* Point on the next character */
@@ -164,7 +164,6 @@ void Paint::DrawStringAt(int x, int y, const char* text, sFONT* font, int colore
         counter++;
     }
 }
-
 
 /**
 *  @brief: this draws a line on the frame buffer
@@ -301,7 +300,6 @@ void Paint::DrawFilledCircle(int x, int y, int radius, int colored) {
 }
 
 /* END OF FILE */
-
 
 
 

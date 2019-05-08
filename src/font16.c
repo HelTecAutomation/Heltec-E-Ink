@@ -9,7 +9,6 @@
 #elif defined( AVR )
 #include <avr/pgmspace.h>
 #endif
-
 // 
 //  Font data for Courier New 12pt
 // 
@@ -1732,4 +1731,5 @@ sFONT Font16 = {
   11, /* Width */
   16, /* Height */
 };
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

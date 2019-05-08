@@ -18,7 +18,7 @@
 #define CS_PIN          10
 #define BUSY_PIN        7
 
-#elif defined( ESP8266)
+#elif defined( ESP8266 )
 #define RST_PIN         16
 #define DC_PIN          4
 #define CS_PIN          15
