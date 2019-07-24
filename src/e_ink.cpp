@@ -471,24 +471,25 @@ int Epd::Init(const unsigned char* lut) {
 
     this->lut = lut;
     Reset();
-    SendCommand(DRIVER_OUTPUT_CONTROL);
+    SendCommand(DRIVER_OUTPUT_CONTROL);  //0X01
     SendData((EPD_HEIGHT - 1) & 0xFF);
     SendData(((EPD_HEIGHT - 1) >> 8) & 0xFF);
     SendData(0x00);                     // GD = 0; SM = 0; TB = 0;
-    SendCommand(BOOSTER_SOFT_START_CONTROL);
+    SendCommand(BOOSTER_SOFT_START_CONTROL); //0X0C
     SendData(0xD7);
     SendData(0xD6);
     SendData(0x9D);
-    SendCommand(WRITE_VCOM_REGISTER);
-    SendData(0xA8);                     // VCOM 7C
-    SendCommand(SET_DUMMY_LINE_PERIOD);
+    SendCommand(WRITE_VCOM_REGISTER);   //0X2C
+    SendData(0xA8);  //9A                   // VCOM 7C
+    SendCommand(SET_DUMMY_LINE_PERIOD); //0X3A
     SendData(0x1A);                     // 4 dummy lines per gate
-    SendCommand(SET_GATE_TIME);
+    SendCommand(SET_GATE_TIME);         //0X3B
     SendData(0x08);                     // 2us per line
-    SendCommand(DATA_ENTRY_MODE_SETTING);
-    SendData(0x03);                     // X increment; Y increment
+    SendCommand(DATA_ENTRY_MODE_SETTING); //0X11
+    SendData(0x01);  //SendData(0x03);                      // X increment; Y increment
     SetLut(this->lut);
-
+    
+ 
     return 0;
 }
 
@@ -516,9 +517,9 @@ void Epd::SendData(unsigned char data) {
  */
 void Epd::Reset(void) {
     DigitalWrite(reset_pin, LOW);                //module reset
-    DelayMs(200);
+    DelayMs(100);
     DigitalWrite(reset_pin, HIGH);
-    DelayMs(200);
+    DelayMs(100);
 }
 
 /**
