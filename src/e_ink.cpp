@@ -480,13 +480,15 @@ int Epd::Init(const unsigned char* lut) {
     SendData(0xD6);
     SendData(0x9D);
     SendCommand(WRITE_VCOM_REGISTER);   //0X2C
-    SendData(0xA8);  //9A                   // VCOM 7C
+    SendData(0xA8);                    // VCOM 7C
+    //SendData(0X9A);                   // VCOM 7C
     SendCommand(SET_DUMMY_LINE_PERIOD); //0X3A
     SendData(0x1A);                     // 4 dummy lines per gate
     SendCommand(SET_GATE_TIME);         //0X3B
     SendData(0x08);                     // 2us per line
     SendCommand(DATA_ENTRY_MODE_SETTING); //0X11
-    SendData(0x01);  //SendData(0x03);                      // X increment; Y increment
+    //SendData(0x01);                // X increment; Y increment
+    SendData(0x03);               // X increment; Y increment
     SetLut(this->lut);
     
  
