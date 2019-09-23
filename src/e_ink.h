@@ -1,8 +1,14 @@
 #ifndef E_INK_H
 #define E_INK_H
+
+#include <Arduino.h>
 #include "epdif.h"
+#include <Wire.h>
+#include <SPI.h>
 #include "imagedata.h"
 
+/*Select screen size*/
+#define USE_290 /*USE_154、USE213、USE_290*/
 
 #if defined(  USE_154  )
 // Display resolution
@@ -116,6 +122,8 @@ private:
 #define READ_OTP_DATA                               0xA2
 #define POWER_SAVING                                0xE3
 
+extern const unsigned char lut_full_update[];
+
 class Epd : EpdIf {
 public:
     int width;
@@ -123,7 +131,7 @@ public:
 
     Epd();
     ~Epd();
-    int  Init(void);
+    int  Init(const unsigned char* lut);
     void SendCommand(unsigned char command);
     void SendData(unsigned char data);
     void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);

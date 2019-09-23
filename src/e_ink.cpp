@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "e_ink.h"
-#include "imagedata.h"
 
 #if defined(  USE_154  )
 Epd::~Epd() {
@@ -17,8 +16,17 @@ Epd::Epd() {
 
 int Epd::Init(const unsigned char* lut) {
     /* this calls the peripheral hardware interface, see epdif */
+	Serial.begin(9600);
+	#if defined( USE_ESP32 )
+	SPI.begin(SCK,MISO,MOSI,SS);
+
+	#elif defined( USE_ESP8266 )
+	SPI.pins(SCK,MISO,MOSI,SS);
+	SPI.begin();
+	#endif
     if (IfInit() != 0) {
         return -1;
+		Serial.print("e-Paper init failed");
     }
     /* EPD hardware init start */
     this->lut = lut;
@@ -41,6 +49,7 @@ int Epd::Init(const unsigned char* lut) {
     SendData(0x03);                     // X increment; Y increment
     SetLut(this->lut);
     /* EPD hardware init end */
+	Serial.print("e-Paper init OK");
     return 0;
 }
 
@@ -264,9 +273,18 @@ Epd::Epd() {
     height = EPD_HEIGHT;
 };
 
-int Epd::Init(void) {
+int Epd::Init(const unsigned char* lut) {
     /* this calls the peripheral hardware interface, see epdif */
+	Serial.begin(9600);
+	#if defined( USE_ESP32 )
+	SPI.begin(SCK,MISO,MOSI,SS);
+
+	#elif defined( USE_ESP8266 )
+	SPI.pins(SCK,MISO,MOSI,SS);
+	SPI.begin();
+	#endif
     if (IfInit() != 0) {
+		Serial.print("e-Paper init failed");
         return -1;
     }
     /* EPD hardware init start */
@@ -284,9 +302,15 @@ int Epd::Init(void) {
     SendData(0x00);
     SendData(0xD4);     // height: 212
     /* EPD hardware init end */
+	Serial.print("e-Paper init OK");
     return 0;
 
 }
+
+const unsigned char lut_full_update[] =
+{
+
+};
 
 /**
  *  @brief: basic function for sending commands
@@ -464,8 +488,18 @@ Epd::Epd() {
 };
 
 int Epd::Init(const unsigned char* lut) {
+	
+	Serial.begin(9600);
+	#if defined( USE_ESP32 )
+	SPI.begin(SCK,MISO,MOSI,SS);
+
+	#elif defined( USE_ESP8266 )
+	SPI.pins(SCK,MISO,MOSI,SS);
+	SPI.begin();
+	#endif
 
     if (IfInit() != 0) {
+		Serial.print("e-Paper init failed");
         return -1;
     }
 
@@ -480,18 +514,16 @@ int Epd::Init(const unsigned char* lut) {
     SendData(0xD6);
     SendData(0x9D);
     SendCommand(WRITE_VCOM_REGISTER);   //0X2C
-    SendData(0xA8);                    // VCOM 7C
-    //SendData(0X9A);                   // VCOM 7C
+    SendData(0xA8);  //9A                   // VCOM 7C
     SendCommand(SET_DUMMY_LINE_PERIOD); //0X3A
     SendData(0x1A);                     // 4 dummy lines per gate
     SendCommand(SET_GATE_TIME);         //0X3B
     SendData(0x08);                     // 2us per line
     SendCommand(DATA_ENTRY_MODE_SETTING); //0X11
-    //SendData(0x01);                // X increment; Y increment
-    SendData(0x03);               // X increment; Y increment
+    SendData(0x03);  //SendData(0x03);                      // X increment; Y increment
     SetLut(this->lut);
-    
- 
+	/* EPD hardware init end */
+	Serial.print("e-Paper init OK");
     return 0;
 }
 

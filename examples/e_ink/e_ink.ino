@@ -1,9 +1,10 @@
-/*
-  This is a simple example show the e-ink
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  www.heltec.cn
-  */
+/*This Code applicable to e-ink(1.54/2.13/2.90) driven by HelTec AutoMation WiFi_Kit_Series Development Board.
+  Simple e-ink Display example
+  1.54--200 x 200 IMAGE_DATA 1,2
+  2.13--104 x 212 IMAGE_RED IMAGE_BLACK
+  2.90--128 x 296 IMAGE 1,2,3,4,5
+*/ 
+
 #include <SPI.h>
 #include "e_ink.h"
 #include "e_ink_display.h"
@@ -12,161 +13,92 @@
 #define COLORED     0
 #define UNCOLORED   1
 
-
-#if defined( USE_154 )
 unsigned char image[1024];
 Paint paint(image, 0, 0);    // width should be the multiple of 8
 Epd epd;
 
-void setup() {
+/*Please select screen size in <e-ink.h>*/
 
-  Serial.begin(9600);
-  #if defined( ESP32 )
-  SPI.begin(SCK,MISO,MOSI,SS);
-
-  #elif defined( ESP8266 )
-  SPI.pins(SCK,MISO,MOSI,SS);
-  SPI.begin();
-  #endif
-  if (epd.Init(lut_full_update) != 0) {
-      Serial.print("e-Paper init failed");
-      return;
-  }
-  epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
-  epd.DisplayFrame();
-  epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
-  epd.DisplayFrame();
-  delay(1000);
-
-
-  paint.SetWidth(30);
-  paint.SetHeight(196);
-  paint.SetRotate(ROTATE_270);
-  paint.Clear(UNCOLORED);
-  paint.DrawStringAt(40, 10, "Hello world!", &Font16, COLORED);
-  epd.SetFrameMemory(paint.GetImage(),70, 5, paint.GetWidth(), paint.GetHeight());
-  epd.DisplayFrame();
-  delay(1000);
-
-  epd.SetFrameMemory(IMAGE_DATA2);
-  epd.DisplayFrame();
-  epd.SetFrameMemory(IMAGE_DATA2);
-  epd.DisplayFrame();
-  delay(2000);
-
-  epd.SetFrameMemory(IMAGE_DATA);
-  epd.DisplayFrame();
-  epd.SetFrameMemory(IMAGE_DATA);
-  epd.DisplayFrame();
-  delay(2000);
-
-  epd.SetFrameMemory(IMAGE_DATA1);
-  epd.DisplayFrame();
-  epd.SetFrameMemory(IMAGE_DATA1);
-  epd.DisplayFrame();
-  delay(2000);
-
-//  epd.SetFrameMemory(IMAGE_DATA1);
-//  epd.DisplayFrame();
-//  epd.SetFrameMemory(IMAGE_DATA1);
-//  epd.DisplayFrame();
-  
-}
-
-void loop()
+void setup() 
 {
-  paint.SetWidth(30);           /*设置区域的大小*/
-  paint.SetHeight(170);
-  paint.SetRotate(ROTATE_270); /*旋转文字的方向*/
-
-  paint.Clear(COLORED);          /*将区域显示为黑色*/
-  paint.DrawStringAt(20,8, "E-INK-1.54", &Font20, UNCOLORED);
-  epd.SetFrameMemory(paint.GetImage(), 30, 15, paint.GetWidth(), paint.GetHeight());     /*设置区域的位置*/
-  epd.DisplayFrame();
-  delay(3000);
-
+  pinMode(12,OUTPUT);
+  digitalWrite(12,HIGH);
+ epd.Init(lut_full_update);
+ Display_clear();
+#if defined(USE_154)
+  Display_picture(IMAGE_DATA2);
+  Display_clear();
+  Display_picture(IMAGE_DATA);
+  Display_clear();
+  Display_picture(IMAGE_DATA1);
+  Display_String(30,170,20,8,"E-INK-1.54",&Font20,30,15);
+#elif defined(USE_213)
+  Display_Color_picture(IMAGE_BLACK,IMAGE_RED);
+#elif defined(USE_290)
+  Display_picture(IMAGE2);
+  Display_clear();
+  Display_picture(IMAGE1);
+  Display_clear();
+  Display_picture(IMAGE);
+  Display_String(24,128,10,8,"E-INK-2.90",&Font16,50,90);
+#endif
 }
 
-#elif defined( USE_213 )
-
-  Epd epd;
-void setup() {
-  Serial.begin(9600);
-  #if defined( USE_ESP32 )
-  SPI.begin(SCK,MISO,MOSI,SS);
-  #elif defined( USE_ESP8266 )
-  SPI.pins(SCK,MISO,MOSI,SS);
-  SPI.begin();
-  #endif
-  if (epd.Init() != 0) {
-    Serial.print("e-Paper init failed");
-    return;
-  }
-
-   epd.ClearFrame();
-   epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
-
-/*
-  paint.Clear(COLORED);
-  paint.DrawStringAt(8, 2, "Hello world", &Font12, UNCOLORED);
-  epd.SetPartialWindowRed(paint.GetImage(), 0, 24, paint.GetWidth(), paint.GetHeight());
-  epd.DisplayFrame();
-*/
+void loop() 
+{
+    
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-#elif defined( USE_290 )
-
-unsigned char image[1024];
-Paint paint(image, 0, 0);    // width should be the multiple of 8
-Epd epd;
-
-void setup() {
-  Serial.begin(9600);
-  #if defined( USE_ESP32 )
-  SPI.begin(SCK,MISO,MOSI,SS);
-  #elif defined( USE_ESP8266 )
-  SPI.pins(SCK,MISO,MOSI,SS);
-  SPI.begin();
-  #endif
-   if (epd.Init(lut_full_update) != 0)
-  {
-      Serial.print("e-Paper init failed");
-      return;
-  }
+void Display_clear()
+{
+#if defined(USE_213)
+  epd.ClearFrame();
+  //epd.DisplayFrame();
+#elif defined(USE_154) || defined(USE_290)
   epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
   epd.DisplayFrame();
   epd.ClearFrameMemory(0xFF);   // bit set = white, bit reset = black
   epd.DisplayFrame();
   delay(2000);
-
-  epd.SetFrameMemory(IMAGE);
-  epd.DisplayFrame();
-  epd.SetFrameMemory(IMAGE);
-  epd.DisplayFrame();
-  delay(1000);
-
-      if (epd.Init(lut_partial_update) != 0) {
-      Serial.print("e-Paper init failed");
-      return;
-  }
+#endif
 }
 
-void loop() {
-
-
-
-
- //paint.SetWidth(24);   /*设置区域的大小*/
- // paint.SetHeight(128);
-  //paint.SetRotate(ROTATE_270);   /*旋转文字的方向*/
- // paint.Clear(COLORED);          /*将区域显示为黑色*/
- // paint.DrawStringAt(10,8, "E-INK-2.90", &Font16, UNCOLORED);     /*设置文字的位置*/
-  //epd.SetFrameMemory(paint.GetImage(), 50,90, paint.GetWidth(), paint.GetHeight());    /*设置区域的位置*/
- // epd.DisplayFrame();
- // delay(1000);
+#if defined(USE_213)
+void Display_Color_picture(const unsigned char* IMAGE_BLACK,const unsigned char* IMAGE_RED)
+{
+  epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
+}
+#elif defined(USE_154) || defined(USE_290)
+void Display_picture(const unsigned char* IMAGE_BUFFER)
+{
+  epd.SetFrameMemory(IMAGE_BUFFER);
+  epd.DisplayFrame();
+  epd.SetFrameMemory(IMAGE_BUFFER);
+  epd.DisplayFrame();
+  delay(2000);
 }
 #endif
+
+/*width,Heigh显示区域的快读和高度
+  TextX,TextY在显示区域中字符的起始位置
+  text为显示内容
+  font为显示字体：font8、font12、font16、font20、font24
+  areaX,areaY显示区域相对于屏的起始位置，右上角为（0，0）
+*/
+void Display_String(int width, int Heigh, int TextX, int TextY, const char* text, sFONT* font, int areaX,int aeraY )
+{
+  paint.Clear(COLORED);
+  paint.SetWidth(width);   /*设置区域的大小*/
+  paint.SetHeight(Heigh);
+  paint.SetRotate(ROTATE_270);   /*旋转文字的方向*/
+  paint.DrawStringAt(TextX, TextY, text, font, UNCOLORED);
+
+#if defined(USE_213)
+  //epd.SetPartialWindowBlack(paint.GetImage(), areaX, aeraY, paint.GetWidth(), paint.GetHeight());
+  epd.SetPartialWindowRed(paint.GetImage(), areaX, aeraY, paint.GetWidth(), paint.GetHeight());
+#elif defined(USE_154) || defined(USE_290)
+  epd.SetFrameMemory(paint.GetImage(), areaX,aeraY, paint.GetWidth(), paint.GetHeight());
+#endif
+  epd.DisplayFrame();
+  delay(1000);
+}
