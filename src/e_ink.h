@@ -6,7 +6,7 @@
 #include <Wire.h>
 #include <SPI.h>
 #include "imagedata.h"
-//#define USE_583_BWY
+/////#define USE_260_BW
 /* 1.54 inch screen of 152x152 BWY and BWR */
 #define USE_154 defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 )
 /* 2.13 inch screen  BW and BWRou and BWY and BWR */
