@@ -6,16 +6,116 @@
 #include <Wire.h>
 #include <SPI.h>
 #include "imagedata.h"
+//#define USE_583_BWY
+/* 1.54 inch screen of 152x152 BWY and BWR */
+#define USE_154 defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 )
+/* 2.13 inch screen  BW and BWRou and BWY and BWR */
+#define USE_213 defined (  USE_213_BWR  ) || defined ( USE_213_BWY ) || \
+                defined ( USE_213_BWRou ) || defined ( USE_213_BW )
+/* 2.6 inch screen  BW and BWR */
+#define USE_260 defined (  USE_260_BW  ) || defined (  USE_260_BWR  )
+/* 2.7 inch screen  BW and BWR */
+#define USE_270 defined ( USE_270_BW ) || defined ( USE_270_BWR )
+/* 2.9 inch screen BWRou and BWY and BWR */
+#define USE_290 defined ( USE_290_BWRou ) || defined ( USE_290_BWR ) || \
+                defined ( USE_290_BWY )
+/* 4.2 inch screen  BW and BWY and BWR */
+#define USE_420 defined ( USE_420_BWR ) || defined ( USE_420_BWY ) || \
+                defined ( USE_420_BW )
+/* 5.83 inch screen  BW and BWY and BWR */
+#define USE_583 defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
+                defined ( USE_583_BWR )
+/* 7.5 inch screen  BW and BWY and BWR */
+#define USE_750 defined ( USE_750_BW ) || defined ( USE_750_BWR ) || \
+                defined ( USE_750_BWY )
+/* Special initialization screen */
+#define SPECIAL_SCREEN   defined ( USE_154_BW_GREEN ) || defined ( USE_290_BW ) || \
+                         defined ( USE_154_BW_BLUE )
 
-/*Select screen size*/
-#define USE_290 /*USE_154、USE213、USE_290*/
+/* Ordinary initialization screen */ 
+#define ORDINARY_SCREEN  defined ( USE_260_BW  ) || defined ( USE_260_BWR ) || \
+                         defined ( USE_270_BW  ) || defined ( USE_270_BWR ) || \
+                         defined ( USE_290_BWRou ) || defined ( USE_290_BWY ) || \
+                         defined ( USE_290_BWR ) || defined ( USE_420_BW  ) || \
+                         defined ( USE_420_BWR ) || defined ( USE_420_BWY ) || \
+                         defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 ) || \
+                         defined (  USE_213_BWR  ) || defined ( USE_213_BWY ) || \
+                         defined ( USE_213_BWRou ) || defined ( USE_213_BW ) || \
+                         defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
+                         defined ( USE_583_BWR ) || defined ( USE_750_BW ) || \
+                         defined ( USE_750_BWR ) || defined ( USE_750_BWY )
+ /* The function void DisplayFrame(const unsigned char* ) passes  a parameter */                        
+#define ONLY_A_PARAMETER defined ( USE_213_BWRou ) || defined ( USE_583_BW ) || \
+						 defined ( USE_583_BWR ) || defined ( USE_583_BWY ) || \
+						 defined ( USE_750_BWR ) || defined ( USE_750_BWY ) || \
+						 defined ( USE_750_BW  ) || defined ( USE_270_BW ) || \
+						 defined ( USE_290_BWRou ) || defined ( USE_420_BW ) || \
+						 defined ( USE_213_BW )
+ /* The function void DisplayFrame(const unsigned char* ,const unsigned char*) passes  two parameters */ 
+#define TWO_PARAMETER	 defined ( USE_213_BWR ) || defined ( USE_213_BWY ) || \
+						 defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 ) || \
+						 defined ( USE_260_BW ) || defined ( USE_260_BWR ) || \
+						 defined ( USE_270_BWR ) || defined ( USE_290_BWR ) || \
+						 defined ( USE_290_BWY ) || defined ( USE_420_BWR ) || \
+						 defined ( USE_420_BWY )
+/* Select screen size */
 
-#if defined(  USE_154  )
-// Display resolution
+#if defined ( USE_154_BW_GREEN ) ||  defined ( USE_154_BW_BLUE )
+/* Display resolution */
 #define EPD_WIDTH       200
 #define EPD_HEIGHT      200
 
-// EPD1IN54 commands
+#elif USE_154
+/* Display resolution */
+#define EPD_WIDTH       152
+#define EPD_HEIGHT      152
+
+#elif USE_213
+/* Display resolution */
+#define EPD_WIDTH       104
+#define EPD_HEIGHT      212
+
+#elif USE_260
+/* Display resolution */
+#define EPD_WIDTH       152
+#define EPD_HEIGHT      296
+
+#elif USE_270
+/* Display resolution */
+#define EPD_WIDTH       176
+#define EPD_HEIGHT      264
+
+#elif defined ( USE_290_BW )
+/* Display resolution */
+#define EPD_WIDTH       128
+#define EPD_HEIGHT      296
+
+#elif USE_290
+/* Display resolution */
+#define EPD_WIDTH       128
+#define EPD_HEIGHT      296
+
+#elif USE_420
+/* Display resolution */
+#define EPD_WIDTH       300
+#define EPD_HEIGHT      400
+
+#elif USE_583
+/* Display resolution */
+#define EPD_WIDTH       448
+#define EPD_HEIGHT      600
+#define COUNTER			67200	/* Number of bytes required */
+
+#elif USE_750
+/* Display resolution */
+#define EPD_WIDTH       384
+#define EPD_HEIGHT      640
+#define COUNTER		   	61440	/* Number of bytes required */
+
+#endif
+
+#if SPECIAL_SCREEN
+/* EPD commands */
 #define DRIVER_OUTPUT_CONTROL                       0x01
 #define BOOSTER_SOFT_START_CONTROL                  0x0C
 #define GATE_SCAN_START_POSITION                    0x0F
@@ -38,52 +138,8 @@
 #define SET_RAM_Y_ADDRESS_COUNTER                   0x4F
 #define TERMINATE_FRAME_READ_WRITE                  0xFF
 
-extern const unsigned char lut_full_update[];
-extern const unsigned char lut_partial_update[];
-
-class Epd : EpdIf {
-public:
-    unsigned long width;
-    unsigned long height;
-
-    Epd();
-    ~Epd();
-    int  Init(const unsigned char* lut);
-    void SendCommand(unsigned char command);
-    void SendData(unsigned char data);
-    void WaitUntilIdle(void);
-    void Reset(void);
-    void SetFrameMemory(
-        const unsigned char* image_buffer,
-        int x,
-        int y,
-        int image_width,
-        int image_height
-    );
-    void SetFrameMemory(const unsigned char* image_buffer);
-    void ClearFrameMemory(unsigned char color);
-    void DisplayFrame(void);
-    void Sleep(void);
-
-private:
-    unsigned int reset_pin;
-    unsigned int dc_pin;
-    unsigned int cs_pin;
-    unsigned int busy_pin;
-    const unsigned char* lut;
-
-    void SetLut(const unsigned char* lut);
-    void SetMemoryArea(int x_start, int y_start, int x_end, int y_end);
-    void SetMemoryPointer(int x, int y);
-};
-
-
-#elif  defined(  USE_213  )
-// Display resolution
-#define EPD_WIDTH       104
-#define EPD_HEIGHT      212
-
-// EPD2IN13B commands
+#elif ORDINARY_SCREEN
+/* EPD commands */
 #define PANEL_SETTING                               0x00
 #define POWER_SETTING                               0x01
 #define POWER_OFF                                   0x02
@@ -95,12 +151,20 @@ private:
 #define DATA_START_TRANSMISSION_1                   0x10
 #define DATA_STOP                                   0x11
 #define DISPLAY_REFRESH                             0x12
-#define DATA_START_TRANSMISSION_2                   0x13
+#define DATA_START_TRANSMISSION_2                   0x13	/* 583 #define IMAGE_PROCESS_COMMAND */
+#define PARTIAL_DATA_START_TRANSMISSION_1		   	0x14 	/* Only 270 screen */
+#define PARTIAL_DATA_START_TRANSMISSION_2		   	0x15 	/* Only 270 screen */
+#define PARTIAL_DISPLAY_REFRESH				        0X16	/* Only 270 screen */
 #define VCOM_LUT                                    0x20
 #define W2W_LUT                                     0x21
 #define B2W_LUT                                     0x22
 #define W2B_LUT                                     0x23
 #define B2B_LUT                                     0x24
+#define LUT_RED_0                                   0X25
+#define LUT_RED_1                                   0X26
+#define LUT_RED_2                                   0x27
+#define LUT_RED_3                                   0x28
+#define LUT_XON                                     0x29
 #define PLL_CONTROL                                 0x30
 #define TEMPERATURE_SENSOR_CALIBRATION              0x40
 #define TEMPERATURE_SENSOR_SELECTION                0x41
@@ -110,73 +174,22 @@ private:
 #define LOW_POWER_DETECTION                         0x51
 #define TCON_SETTING                                0x60
 #define RESOLUTION_SETTING                          0x61
+#define SOURCE_GATE_START_SETTING			    	0x62    /* Only 270 screen */
+#define GSST_SETTING                                0X65    /*420 and 583 screen*/
+#define REVISION_SETTING                            0X70	/* Only 583 screen */
 #define GET_STATUS                                  0x71
 #define AUTO_MEASURE_VCOM                           0x80
 #define READ_VCOM_VALUE                             0x81
 #define VCM_DC_SETTING                              0x82
-#define PARTIAL_WINDOW                              0x90
-#define PARTIAL_IN                                  0x91
-#define PARTIAL_OUT                                 0x92
+#define PARTIAL_WINDOW                              0x90	/* 260 and 290 */ 
+#define PARTIAL_IN                                  0x91	/* 260 and 290 */ 
+#define PARTIAL_OUT                                 0x92	/* 260 and 290 */ 
 #define PROGRAM_MODE                                0xA0
 #define ACTIVE_PROGRAM                              0xA1
 #define READ_OTP_DATA                               0xA2
-#define POWER_SAVING                                0xE3
+#define POWER_SAVING                                0xE3	/* Only 260 screen */
 
-extern const unsigned char lut_full_update[];
-
-class Epd : EpdIf {
-public:
-    int width;
-    int height;
-
-    Epd();
-    ~Epd();
-    int  Init(const unsigned char* lut);
-    void SendCommand(unsigned char command);
-    void SendData(unsigned char data);
-    void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
-    void SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
-    void SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
-    void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
-    void DisplayFrame(void);
-    void ClearFrame(void);
-
-private:
-    unsigned int dc_pin;
-    unsigned int cs_pin;
-    unsigned int reset_pin;
-    unsigned int busy_pin;
-};
-
-
-
-#elif  defined(  USE_290  )
-// Display resolution
-#define EPD_WIDTH       128
-#define EPD_HEIGHT      296
-
-// EPD2IN9 commands
-#define DRIVER_OUTPUT_CONTROL                       0x01
-#define BOOSTER_SOFT_START_CONTROL                  0x0C
-#define GATE_SCAN_START_POSITION                    0x0F
-#define DEEP_SLEEP_MODE                             0x10
-#define DATA_ENTRY_MODE_SETTING                     0x11
-#define SW_RESET                                    0x12
-#define TEMPERATURE_SENSOR_CONTROL                  0x1A
-#define MASTER_ACTIVATION                           0x20
-#define DISPLAY_UPDATE_CONTROL_1                    0x21
-#define DISPLAY_UPDATE_CONTROL_2                    0x22
-#define WRITE_RAM                                   0x24
-#define WRITE_VCOM_REGISTER                         0x2C
-#define WRITE_LUT_REGISTER                          0x32
-#define SET_DUMMY_LINE_PERIOD                       0x3A
-#define SET_GATE_TIME                               0x3B
-#define BORDER_WAVEFORM_CONTROL                     0x3C
-#define SET_RAM_X_ADDRESS_START_END_POSITION        0x44
-#define SET_RAM_Y_ADDRESS_START_END_POSITION        0x45
-#define SET_RAM_X_ADDRESS_COUNTER                   0x4E
-#define SET_RAM_Y_ADDRESS_COUNTER                   0x4F
-#define TERMINATE_FRAME_READ_WRITE                  0xFF
+#endif
 
 extern const unsigned char lut_full_update[];
 extern const unsigned char lut_partial_update[];
@@ -191,7 +204,14 @@ public:
     int  Init(const unsigned char* lut);
     void SendCommand(unsigned char command);
     void SendData(unsigned char data);
-    void Reset(void);
+    void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
+    void SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
+    void SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
+	void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
+	void DisplayFrame(const unsigned char* frame_buffer_black);
+	void DisplayFrame(void);
+    void ClearFrame(void);
+    void WaitUntilIdle(void);
     void SetFrameMemory(
         const unsigned char* image_buffer,
         int x,
@@ -201,16 +221,28 @@ public:
     );
     void SetFrameMemory(const unsigned char* image_buffer);
     void ClearFrameMemory(unsigned char color);
-    void DisplayFrame(void);
+    void Reset(void);
+    void SetLut(void);
+    void RefreshPartial(int x, int y, int w, int l);
     void Sleep(void);
+#if USE_154
+    void SetLutBw(void);
+    void SetLutRed(void);
+#elif defined ( USE_270_BW )
+//270_bw
+    void Gray_SetLut(void);
+    void Display4Gray(const unsigned char *image);
+    void Init_4Gray(void);
 
+    //583_bwy
+//    void DisplayOneQuarterFrame(const unsigned char* image_black, const unsigned char* image_red);
+#endif
 private:
-    unsigned int reset_pin;
     unsigned int dc_pin;
     unsigned int cs_pin;
+    unsigned int reset_pin;
     unsigned int busy_pin;
     const unsigned char* lut;
-
     void setPins(unsigned int ss,unsigned int reset);
     void setSPIFrequency(uint32_t frequency);
     void SetLut(const unsigned char* lut);
@@ -218,7 +250,6 @@ private:
     void SetMemoryPointer(int x, int y);
 };
 
-#endif
 #endif
 /* END OF FILE */
 
