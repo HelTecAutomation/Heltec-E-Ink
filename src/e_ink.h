@@ -6,18 +6,27 @@
 #include <Wire.h>
 #include <SPI.h>
 #include "imagedata.h"
-/////#define USE_260_BW
+#define USE_290_BW  
+        /* USE_154_BW_GREEN, USE_154_BW_BLUE, USE_154_BWY, USE_154_BWR_152 
+           USE_213_BW, USE_213_BWSoft, USE_213_BWR, USE_213_BWY, 
+           USE_260_BW, USE_260_BWR, 
+           USE_270_BW, USE_270_BWR, 
+           USE_290_BW, USE_290_BWSoft, USE_290_BWR, USE_290_BWY,
+           USE_420_BW, USE_420_BWR, USE_420_BWY,
+           USE_583_BW, USE_583_BWY, USE_583_BWR,
+           USE_750_BW, USE_750_BWR, USE_750_BWY
+           */
 /* 1.54 inch screen of 152x152 BWY and BWR */
-#define USE_154 defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 )
-/* 2.13 inch screen  BW and BWRou and BWY and BWR */
+#define USE_154 defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 )//1.54inch,152x152 pixel with BLACK,WHITE and RED does not exist.
+/* 2.13 inch screen  BW and BWSoft and BWY and BWR */
 #define USE_213 defined (  USE_213_BWR  ) || defined ( USE_213_BWY ) || \
-                defined ( USE_213_BWRou ) || defined ( USE_213_BW )
+                defined ( USE_213_BWSoft ) || defined ( USE_213_BW )
 /* 2.6 inch screen  BW and BWR */
 #define USE_260 defined (  USE_260_BW  ) || defined (  USE_260_BWR  )
 /* 2.7 inch screen  BW and BWR */
 #define USE_270 defined ( USE_270_BW ) || defined ( USE_270_BWR )
-/* 2.9 inch screen BWRou and BWY and BWR */
-#define USE_290 defined ( USE_290_BWRou ) || defined ( USE_290_BWR ) || \
+/* 2.9 inch screen BWSoft and BWY and BWR */
+#define USE_290 defined ( USE_290_BWSoft ) || defined ( USE_290_BWR ) || \
                 defined ( USE_290_BWY )
 /* 4.2 inch screen  BW and BWY and BWR */
 #define USE_420 defined ( USE_420_BWR ) || defined ( USE_420_BWY ) || \
@@ -35,31 +44,17 @@
 /* Ordinary initialization screen */ 
 #define ORDINARY_SCREEN  defined ( USE_260_BW  ) || defined ( USE_260_BWR ) || \
                          defined ( USE_270_BW  ) || defined ( USE_270_BWR ) || \
-                         defined ( USE_290_BWRou ) || defined ( USE_290_BWY ) || \
+                         defined ( USE_290_BWSoft ) || defined ( USE_290_BWY ) || \
                          defined ( USE_290_BWR ) || defined ( USE_420_BW  ) || \
                          defined ( USE_420_BWR ) || defined ( USE_420_BWY ) || \
                          defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 ) || \
                          defined (  USE_213_BWR  ) || defined ( USE_213_BWY ) || \
-                         defined ( USE_213_BWRou ) || defined ( USE_213_BW ) || \
+                         defined ( USE_213_BWSoft ) || defined ( USE_213_BW ) || \
                          defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
                          defined ( USE_583_BWR ) || defined ( USE_750_BW ) || \
                          defined ( USE_750_BWR ) || defined ( USE_750_BWY )
- /* The function void DisplayFrame(const unsigned char* ) passes  a parameter */                        
-#define ONLY_A_PARAMETER defined ( USE_213_BWRou ) || defined ( USE_583_BW ) || \
-						 defined ( USE_583_BWR ) || defined ( USE_583_BWY ) || \
-						 defined ( USE_750_BWR ) || defined ( USE_750_BWY ) || \
-						 defined ( USE_750_BW  ) || defined ( USE_270_BW ) || \
-						 defined ( USE_290_BWRou ) || defined ( USE_420_BW ) || \
-						 defined ( USE_213_BW )
- /* The function void DisplayFrame(const unsigned char* ,const unsigned char*) passes  two parameters */ 
-#define TWO_PARAMETER	 defined ( USE_213_BWR ) || defined ( USE_213_BWY ) || \
-						 defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 ) || \
-						 defined ( USE_260_BW ) || defined ( USE_260_BWR ) || \
-						 defined ( USE_270_BWR ) || defined ( USE_290_BWR ) || \
-						 defined ( USE_290_BWY ) || defined ( USE_420_BWR ) || \
-						 defined ( USE_420_BWY )
-/* Select screen size */
 
+/* Select screen size */
 #if defined ( USE_154_BW_GREEN ) ||  defined ( USE_154_BW_BLUE )
 /* Display resolution */
 #define EPD_WIDTH       200
@@ -196,9 +191,6 @@ extern const unsigned char lut_partial_update[];
 
 class Epd : EpdIf {
 public:
-    unsigned long width;
-    unsigned long height;
-
     Epd();
     ~Epd();
     int  Init(const unsigned char* lut);
@@ -207,9 +199,9 @@ public:
     void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
     void SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
     void SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
-	void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
-	void DisplayFrame(const unsigned char* frame_buffer_black);
-	void DisplayFrame(void);
+    void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
+    void DisplayFrame(const unsigned char* frame_buffer_black);
+    void DisplayFrame(void);
     void ClearFrame(void);
     void WaitUntilIdle(void);
     void SetFrameMemory(
@@ -222,21 +214,17 @@ public:
     void SetFrameMemory(const unsigned char* image_buffer);
     void ClearFrameMemory(unsigned char color);
     void Reset(void);
-    void SetLut(void);
+    
     void RefreshPartial(int x, int y, int w, int l);
     void Sleep(void);
-#if USE_154
-    void SetLutBw(void);
-    void SetLutRed(void);
-#elif defined ( USE_270_BW )
-//270_bw
-    void Gray_SetLut(void);
-    void Display4Gray(const unsigned char *image);
-    void Init_4Gray(void);
+protected:
+    void SetMemoryArea(int x_start, int y_start, int x_end, int y_end);
+    void SetMemoryPointer(int x, int y);
 
-    //583_bwy
-//    void DisplayOneQuarterFrame(const unsigned char* image_black, const unsigned char* image_red);
-#endif
+    unsigned long width;
+    unsigned long height;
+
+   // friend class EPDClient;
 private:
     unsigned int dc_pin;
     unsigned int cs_pin;
@@ -245,11 +233,14 @@ private:
     const unsigned char* lut;
     void setPins(unsigned int ss,unsigned int reset);
     void setSPIFrequency(uint32_t frequency);
+    void SetLut(void);
     void SetLut(const unsigned char* lut);
-    void SetMemoryArea(int x_start, int y_start, int x_end, int y_end);
-    void SetMemoryPointer(int x, int y);
+#if USE_154
+    void SetLutBw(void);
+    void SetLutRed(void);
+#endif
 };
-
+extern Epd epd;
 #endif
 /* END OF FILE */
 

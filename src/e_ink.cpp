@@ -81,7 +81,7 @@ void Epd::Reset(void) {
 
 int Epd::Init(const unsigned char* lut) {
     /* this calls the peripheral hardware interface, see epdif */
-	Serial.begin(9600);
+	//Serial.begin(115200);
 	#if defined( USE_ESP32 )
 	SPI.begin(SCK,MISO,MOSI,SS);
 
@@ -90,50 +90,44 @@ int Epd::Init(const unsigned char* lut) {
 	SPI.begin();
 	#endif
     if (IfInit() != 0) {
+    Serial.print("e-Paper init failed");
 		return -1;
     }
 #if defined ( USE_154_BW_GREEN )
 /* EPD hardware init start */
-   // this->lut = lut;
-    Reset();
-    WaitUntilIdle();
-    SendCommand(SW_RESET);
-    WaitUntilIdle();
+    this->lut = lut;
+    //Reset();
+    // WaitUntilIdle();
+    // SendCommand(SW_RESET);
+    // WaitUntilIdle();
     SendCommand(DRIVER_OUTPUT_CONTROL);
     SendData((EPD_HEIGHT - 1) & 0xFF);
     SendData(((EPD_HEIGHT - 1) >> 8) & 0xFF);
     SendData(0x00);                     // GD = 0; SM = 0; TB = 0;
-    SendCommand(0x11); //data entry mode       
+    SendCommand(DATA_ENTRY_MODE_SETTING); //data entry mode       
     SendData(0x01);
-
-    SendCommand(0x44); //set Ram-X address start/end position   
+    SendCommand(SET_RAM_X_ADDRESS_START_END_POSITION); //set Ram-X address start/end position   
     SendData(0x00);
     SendData(0x18);    //0x0C-->(18+1)*8=200
-
-    SendCommand(0x45); //set Ram-Y address start/end position          
+    SendCommand(SET_RAM_Y_ADDRESS_START_END_POSITION); //set Ram-Y address start/end position          
     SendData(0xC7);   //0xC7-->(199+1)=200
     SendData(0x00);
     SendData(0x00);
     SendData(0x00); 
-
-    SendCommand(0x3C); //BorderWavefrom
-    SendData(0x01);	
-        
+    SendCommand(BORDER_WAVEFORM_CONTROL); //BorderWavefrom
+    SendData(0x01);	  
     SendCommand(0x18); 
     SendData(0x80);	
-
-    SendCommand(0x22); // //Load Temperature and waveform setting.
+    SendCommand(DISPLAY_UPDATE_CONTROL_2); // //Load Temperature and waveform setting.
     SendData(0XB1);	
-    SendCommand(0x20); 
-
-
-    SendCommand(0x4E);   // set RAM x address count to 0;
+    SendCommand(MASTER_ACTIVATION); 
+    SendCommand(SET_RAM_X_ADDRESS_COUNTER);   // set RAM x address count to 0;
     SendData(0x00);
-    SendCommand(0x4F);   // set RAM y address count to 0X199;    
+    SendCommand(SET_RAM_Y_ADDRESS_COUNTER);   // set RAM y address count to 0X199;    
     SendData(0xC7);
     SendData(0x00);
-    WaitUntilIdle();
-   // SetLut(this->lut);
+    // WaitUntilIdle();
+    SetLut(this->lut);
     /* EPD hardware init end */
 #elif defined ( USE_154_BW_BLUE )
     /* EPD hardware init start */
@@ -161,7 +155,7 @@ int Epd::Init(const unsigned char* lut) {
     /* EPD hardware init start */
     this->lut = lut;
     Reset();
-      SendCommand(DRIVER_OUTPUT_CONTROL);  //0X01
+    SendCommand(DRIVER_OUTPUT_CONTROL);  //0X01
     SendData((EPD_HEIGHT - 1) & 0xFF);
     SendData(((EPD_HEIGHT - 1) >> 8) & 0xFF);
     SendData(0x00);                     // GD = 0; SM = 0; TB = 0;
@@ -180,7 +174,7 @@ int Epd::Init(const unsigned char* lut) {
     SetLut(this->lut);
 	/* EPD hardware init end */
 #endif
-	Serial.print("e-Paper init OK");
+	Serial.println("e-Paper init OK");
     return 0;
 }
 
@@ -287,7 +281,6 @@ void Epd::ClearFrameMemory(unsigned char color) {
         SendData(color);
     }
 }
-
 /**
  *  @brief: update the display
  *          there are 2 memory areas embedded in the e-paper display
@@ -356,7 +349,7 @@ void Epd::Sleep() {
 int Epd::Init(const unsigned char *lut)
 {
 	 /* this calls the peripheral hardware interface, see epdif */
-	Serial.begin(9600);
+	//Serial.begin(115200);
 	#if defined( USE_ESP32 )
 	SPI.begin(SCK,MISO,MOSI,SS);
 
@@ -365,6 +358,7 @@ int Epd::Init(const unsigned char *lut)
 	SPI.begin();
 	#endif
 	if (IfInit() != 0) {
+	Serial.print("e-Paper init failed!");
         return -1;
     }
 #if  USE_154
@@ -400,12 +394,18 @@ int Epd::Init(const unsigned char *lut)
 #elif USE_213
     /* EPD hardware init start */
     Reset();
+    SendCommand(POWER_SETTING);
+    SendData(0x03);
+    SendData(0x00);
+    SendData(0x2b);
+    SendData(0x2b);
+    SendData(0x03);
     SendCommand(BOOSTER_SOFT_START);
     SendData(0x17);
     SendData(0x17);
     SendData(0x17);
     SendCommand(POWER_ON);
-    //WaitUntilIdle();
+    // WaitUntilIdle();
     SendCommand(PANEL_SETTING);
 #if defined ( USE_213_BWR ) || defined (  USE_213_BWY  )
     SendData(0x8F);
@@ -415,32 +415,20 @@ int Epd::Init(const unsigned char *lut)
     SendData(0x68);     // width: 104
     SendData(0x00);
     SendData(0xD4);     // height: 212
-#elif defined ( USE_213_BWRou )
-    SendData(0xbf);
-    SendCommand(VCOM_AND_DATA_INTERVAL_SETTING);
-    SendData(0x37);
-    SendCommand(RESOLUTION_SETTING);
-    SendData(0x68);     // width: 104
-    SendData(0x00);
-    SendData(0xD4);     // height: 212
-#elif defined ( USE_213_BW )
+#elif defined ( USE_213_BW ) || defined ( USE_213_BWSoft )
     SendData(0xbf);		//LUT from OTP￡?128x296
-		SendData(0x0d);		//VCOM to 0V fast
-		
-		SendCommand(0x30);			//PLL setting
-		SendData (0x3a);   // 3a 100HZ   29 150Hz 39 200HZ	31 171HZ
-
-		SendCommand(0x61);			//resolution setting
-		SendData (0x68);
-		SendData (0x00);
-		SendData (0xd4);
-		
-		SendCommand(0x82);			//vcom_DC setting  	
-		SendData (0x28);
-
-		SendCommand(0X50);			//VCOM AND DATA INTERVAL SETTING			
-		SendData(0x97);		//WBmode:VBDF 17|D7 VBDW 97 VBDB 57		WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
-   
+    SendData(0x0d);		//VCOM to 0V fast
+    SendCommand(PLL_CONTROL);			//PLL setting
+    SendData (0x3a);   // 3a 100HZ   29 150Hz 39 200HZ	31 171HZ
+    SendCommand(RESOLUTION_SETTING);			//resolution setting
+    SendData (0x68);
+    SendData (0x00);
+    SendData (0xd4);
+    SendCommand(VCM_DC_SETTING);			//vcom_DC setting  	
+    SendData (0x28);
+    SendCommand(VCOM_AND_DATA_INTERVAL_SETTING);			//VCOM AND DATA INTERVAL SETTING			
+    SendData(0x97);		//WBmode:VBDF 17|D7 VBDW 97 VBDB 57		WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
+    SetLut();
 #endif
     /* EPD hardware init end */
 #elif USE_260
@@ -483,113 +471,42 @@ int Epd::Init(const unsigned char *lut)
     SendData(0x00);                  // VCOM_HV, VGHL_LV[1], VGHL_LV[0]
     SendData(0x2b);                  // VDH
     SendData(0x2b);                  // VDL
-    SendData(0x09);                  // VDHR
     SendCommand(BOOSTER_SOFT_START);
     SendData(0x07);
     SendData(0x07);
     SendData(0x17);
-    // Power optimization
-    SendCommand(0xF8);
-    SendData(0x60);
-    SendData(0xA5);
-    // Power optimization
-    SendCommand(0xF8);
-    SendData(0x89);
-    SendData(0xA5);
-    // Power optimization
-    SendCommand(0xF8);
-    SendData(0x90);
-    SendData(0x00);
-    // Power optimization
-    SendCommand(0xF8);
-    SendData(0x93);
-    SendData(0x2A);
-    // Power optimization
-    SendCommand(0xF8);
-    SendData(0xA0);
-    SendData(0xA5);
-    // Power optimization
-    SendCommand(0xF8);
-    SendData(0xA1);
-    SendData(0x00);
-    // Power optimization
-    SendCommand(0xF8);
-    SendData(0x73);
-    SendData(0x41);
     SendCommand(PARTIAL_DISPLAY_REFRESH);
     SendData(0x00);
     SendCommand(POWER_ON);
-    //WaitUntilIdle();
-
+    // WaitUntilIdle();
     SendCommand(PANEL_SETTING);
-    SendData(0xAF);        //KW-BF   KWR-AF    BWROTP 0f
+    SendData(0xBF);        //KW-BF   KWR-AF    BWROTP 0f
     SendCommand(PLL_CONTROL);
     SendData(0x3A);       //3A 100HZ   29 150Hz 39 200HZ    31 171HZ
+    SendCommand(0x61);
+    SendData(0x00);
+    SendData(0xb0);
+    SendData(0x01);
+    SendData(0x08);
     SendCommand(VCM_DC_SETTING);
-    SendData(0x12);
+    SendData(0x08);
     DelayMs(2);
+    SendCommand(0X50);			//VCOM AND DATA INTERVAL SETTING			
+    SendData(0x97);		//WBmode:VBDF 17|D7 VBDW 97 VBDB 57		WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
     SetLut();
 #elif defined ( USE_270_BWR )
-    SendCommand(POWER_ON); // POWER_ON
-	//WaitUntilIdle();
-
-	SendCommand(PANEL_SETTING); // PANEL_SETTING
-	SendData(0x4f); // KW-BF   KWR-AF BWROTP 0f
-
-	SendCommand(PLL_CONTROL); // PLL_CONTROL
-	SendData(0x3a); //3A 100HZ   29 150Hz 39 200HZ    31 171HZ
-
-	SendCommand(POWER_SETTING); // PANEL_SETTING
-	SendData(0x03); // VDS_EN, VDG_EN
-	SendData(0x00); // VCOM_HV, VGHL_LV[1], VGHL_LV[0]
-	SendData(0x2b); // VDH
-	SendData(0x2b); // VDL
-	SendData(0x09); // VDHR
-
+    Reset();
 	SendCommand(BOOSTER_SOFT_START);  // BOOSTER_SOFT_START
 	SendData(0x07);
 	SendData(0x07);
 	SendData(0x17);
-
-	// Power optimization
-	SendCommand(0xF8);
-	SendData(0x60);
-	SendData(0xA5);
-
-	// Power optimization
-	SendCommand(0xF8);
-	SendData(0x89);
-	SendData(0xA5);
-
-	// Power optimization
-	SendCommand(0xF8);
-	SendData(0x90);
-	SendData(0x00);
-
-	// Power optimization
-	SendCommand(0xF8);
-	SendData(0x93);
-	SendData(0x2A);
-
-	// Power optimization
-	SendCommand(0xF8);
-	SendData(0x73);
-	SendData(0x41);
-
-	SendCommand(RESOLUTION_SETTING);
-	SendData(width >> 8);
-	SendData(width & 0xff);        //176
-	SendData(height >> 8);
-	SendData(height & 0xff);         //264
-	SendCommand(VCM_DC_SETTING); // VCM_DC_SETTING_REGISTER
-	SendData(0x12);
-	SendCommand(VCOM_AND_DATA_INTERVAL_SETTING); // VCOM_AND_DATA_INTERVAL_SETTING
-	SendData(0x87); // define by OTP
-
-	//SetLut();
-
+    SendCommand(PANEL_SETTING); // PANEL_SETTING
+	SendData(0x4f); // KW-BF   KWR-AF BWROTP 0f
 	SendCommand(PARTIAL_DISPLAY_REFRESH); // PARTIAL_DISPLAY_REFRESH
 	SendData(0x00);
+    SendCommand(POWER_ON); // POWER_ON
+	//WaitUntilIdle();
+	
 #endif
     /* EPD hardware init end */
 #elif USE_290
@@ -650,7 +567,7 @@ int Epd::Init(const unsigned char *lut)
 #elif USE_583
   /** EPD5IN83B Initialization **/
 	/* EPD hardware init start */
-  SendCommand(BOOSTER_SOFT_START);
+    SendCommand(BOOSTER_SOFT_START);
 	SendData(0xC7);
 	SendData(0xCC);
 	SendData(0x28);
@@ -672,7 +589,7 @@ int Epd::Init(const unsigned char *lut)
 	SendCommand(0xe5);
 	SendData(0x03);
 	
-  SendCommand(TCON_SETTING);
+    SendCommand(TCON_SETTING);
 	SendData(0x22);
 	SendCommand(0xe5);           //FLASH MODE
 	SendData(0x03);
@@ -731,23 +648,23 @@ void Epd::SetLutBw(void) {
     unsigned int count;
     SendCommand(VCOM_LUT);         //g vcom
     for(count = 0; count < 15; count++) {
-        SendData(lut_vcom0[count]);
+        SendData(pgm_read_byte(&lut_vcom0[count]));
     }
     SendCommand(W2W_LUT);        //g ww --
     for(count = 0; count < 15; count++) {
-        SendData(lut_w[count]);
+        SendData(pgm_read_byte(&lut_w[count]));
     }
     SendCommand(B2W_LUT);         //g bw r
     for(count = 0; count < 15; count++) {
-        SendData(lut_b[count]);
+        SendData(pgm_read_byte(&lut_b[count]));
     }
     SendCommand(W2B_LUT);         //g wb w
     for(count = 0; count < 15; count++) {
-        SendData(lut_g1[count]);
+        SendData(pgm_read_byte(&lut_g1[count]));
     }
     SendCommand(B2B_LUT);         //g bb b
     for(count = 0; count < 15; count++) {
-        SendData(lut_g2[count]);
+        SendData(pgm_read_byte(&lut_g2[count]));
     }
 }
 
@@ -755,68 +672,68 @@ void Epd::SetLutRed(void) {
     unsigned int count;
     SendCommand(LUT_RED_0);
     for(count = 0; count < 15; count++) {
-        SendData(lut_vcom1[count]);
+        SendData(pgm_read_byte(&lut_vcom1[count]));
     }
     SendCommand(LUT_RED_1);
     for(count = 0; count < 15; count++) {
-        SendData(lut_red0[count]);
+        SendData(pgm_read_byte(&lut_red0[count]));
     }
     SendCommand(LUT_RED_2);
     for(count = 0; count < 15; count++) {
-        SendData(lut_red1[count]);
+        SendData(pgm_read_byte(&lut_red1[count]));
     }
 }
-#elif defined ( USE_260_BW )
+#elif defined ( USE_260_BW ) || defined ( USE_213_BW ) || defined ( USE_213_BWSoft )
 //LUT download
 void Epd :: SetLut(void)
 {
-	unsigned int count;
-	SendCommand(VCOM_LUT);
-	for(count=0;count<44;count++)
-		{SendData(lut_vcomDC[count]);}
+    unsigned int count;
+    SendCommand(VCOM_LUT);
+    for(count=0;count<44;count++)
+        {SendData(pgm_read_byte(&lut_vcomDC[count]));}
 
-	SendCommand(W2W_LUT);
-	for(count=0;count<42;count++)
-		{SendData(lut_ww[count]);}
+    SendCommand(W2W_LUT);
+    for(count=0;count<42;count++)
+        {SendData(pgm_read_byte(&lut_ww[count]));}
 
-	SendCommand(B2W_LUT);
-	for(count=0;count<42;count++)
-		{SendData(lut_bw[count]);}
+    SendCommand(B2W_LUT);
+    for(count=0;count<42;count++)
+        {SendData(pgm_read_byte(&lut_bw[count]));}
 
-	SendCommand(W2B_LUT);
-	for(count=0;count<42;count++)
-		{SendData(lut_wb[count]);}
+    SendCommand(W2B_LUT);
+    for(count=0;count<42;count++)
+        {SendData(pgm_read_byte(&lut_wb[count]));}
 
-	SendCommand(B2B_LUT);
-	for(count=0;count<42;count++)
-		{SendData(lut_bb[count]);}
+    SendCommand(B2B_LUT);
+    for(count=0;count<42;count++)
+        {SendData(pgm_read_byte(&lut_bb[count]));}
 }
 #elif defined ( USE_270_BW )
 void Epd::SetLut(void) {
     unsigned int count;
     SendCommand(VCOM_LUT);                            //vcom
     for(count = 0; count < 44; count++) {
-        SendData(lut_vcom_dc[count]);
+        SendData(pgm_read_byte(&lut_vcom_dc[count]));
     }
 
     SendCommand(W2W_LUT);                      //ww --
     for(count = 0; count < 42; count++) {
-        SendData(lut_ww[count]);
+        SendData(pgm_read_byte(&lut_ww[count]));
     }
 
     SendCommand(B2W_LUT);                      //bw r
     for(count = 0; count < 42; count++) {
-        SendData(lut_bw[count]);
+        SendData(pgm_read_byte(&lut_bw[count]));
     }
 
     SendCommand(W2B_LUT);                      //wb w
     for(count = 0; count < 42; count++) {
-        SendData(lut_bb[count]);
+        SendData(pgm_read_byte(&lut_bb[count]));
     }
 
     SendCommand(B2B_LUT);                      //bb b
     for(count = 0; count < 42; count++) {
-        SendData(lut_wb[count]);
+        SendData(pgm_read_byte(&lut_wb[count]));
     }
 }
 
@@ -940,8 +857,8 @@ void Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned c
    // WaitUntilIdle();
 }
 #if defined ( USE_270_BW ) || defined ( USE_420_BW )|| \
-    defined ( USE_290_BWRou ) || defined ( USE_213_BWRou ) || \
-    defined ( USE_213_BW )
+    defined ( USE_290_BWSoft ) || defined ( USE_213_BWSoft ) || \
+    defined ( USE_213_BW ) || defined ( USE_260_BW )
 /**
  * @brief: refresh and displays the frame
  */
@@ -949,7 +866,8 @@ void Epd::DisplayFrame(const unsigned char* frame_buffer_black)
 {
 	if (frame_buffer_black != NULL)
 	{
-		#if defined ( USE_270_BW ) || defined ( USE_213_BW )
+		#if defined ( USE_270_BW ) || defined ( USE_213_BW ) || defined ( USE_213_BWSoft ) ||\
+            defined ( USE_260_BW )
 			SendCommand(DATA_START_TRANSMISSION_1);
 			DelayMs(2);
 			for (int i = 0; i < this->width * this->height / 8; i++)
@@ -1111,7 +1029,7 @@ void Epd::Sleep() {
 
 #endif
 
-
+Epd epd;
 /* END OF FILE */
 
 
