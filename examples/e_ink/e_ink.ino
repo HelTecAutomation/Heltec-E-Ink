@@ -14,10 +14,11 @@
 
 void setup() 
 {
+  Serial.begin(115200);
   pinMode(12,OUTPUT);
   digitalWrite(12,HIGH);
   epd.Init(lut_full_update);
-  Display_clear(); /* If you are using a 5.83-inch trichromatic screen, shield it */
+  Display_clear();
   Display(); /* The preprocessing function of screen is defined. */
 }
 
