@@ -58,18 +58,21 @@ void Display(void) {
     Display_picture(IMAGE_420_BWY_1_BLACK,IMAGE_420_BWY_1_RED);
 #elif defined ( USE_420_BW )
     Display_picture(IMAGE_420_BW_1);
-#elif defined ( USE_583_BWR )
-    Display_picture( IMAGE_583_BWR );
-#elif defined ( USE_583_BW )
-    Display_picture( IMAGE_583_BW_1 );
-#elif defined ( USE_583_BWY )
-    Display_picture( IMAGE_583_BWY );
-#elif defined ( USE_750_BWR )
-    Display_picture( IMAGE_750_BWR );
-#elif defined ( USE_750_BWY )
-    Display_picture( IMAGE_750_BWY );
-#elif defined ( USE_750_BW )
-    Display_picture( IMAGE_750_BW );
+#endif
+#ifndef USE_UNO
+    #if defined ( USE_583_BWR )
+        Display_picture( IMAGE_583_BWR );
+    #elif defined ( USE_583_BW )
+        Display_picture( IMAGE_583_BW_1 );
+    #elif defined ( USE_583_BWY )
+        Display_picture( IMAGE_583_BWY );
+    #elif defined ( USE_750_BWR )
+        Display_picture( IMAGE_750_BWR );
+    #elif defined ( USE_750_BWY )
+        Display_picture( IMAGE_750_BWY );
+    #elif defined ( USE_750_BW )
+        Display_picture( IMAGE_750_BW );
+    #endif
 #endif
 }
 void Display_clear() {

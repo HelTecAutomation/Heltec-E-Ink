@@ -1,10 +1,10 @@
-//#define USE_UNO
+#define USE_UNO   /*If you need a 5.83-inch or 7.5-inch EPD, avoid using this development board*/
 //#define USE_ESP8266
 //#define USE_ESP32
 
-extern const unsigned char IMAGE_DATA[];
-extern const unsigned char IMAGE_DATA1[];
-extern const unsigned char IMAGE_DATA2[];
+extern const unsigned char IMAGE_DATA[];//1.54 inch
+extern const unsigned char IMAGE_DATA1[];//1.54 inch
+extern const unsigned char IMAGE_DATA2[];//1.54 inch
 extern const unsigned char IMAGE_154_BW[];
 extern const unsigned char IMAGE_154_BWY_1_BLACK[];
 extern const unsigned char IMAGE_154_BWY_1_RED[];
@@ -15,18 +15,14 @@ extern const unsigned char IMAGE_154_BWR_1_RED[];
 extern const unsigned char IMAGE_154_BWR_2_BLACK[];
 extern const unsigned char IMAGE_154_BWR_2_RED[];
 
-extern const unsigned char IMAGE[];
-extern const unsigned char IMAGE1[];
-extern const unsigned char IMAGE2[];
+extern const unsigned char IMAGE[];//2.90 inch
+extern const unsigned char IMAGE1[];//2.90 inch
+extern const unsigned char IMAGE2[];//2.90 inch
 extern const unsigned char IMAGE_290_BWR_BLACK[];
 extern const unsigned char IMAGE_290_BWR_RED[];
 extern const unsigned char IMAGE_290_BWY_BLACK[];
 extern const unsigned char IMAGE_290_BWY_RED[];
 extern const unsigned char IMAGE_290_BWRou[];
-
-extern const unsigned char IMAGE3[];
-extern const unsigned char IMAGE4[];
-
 
 extern const unsigned char IMAGE_213_BW_1[];
 extern const unsigned char IMAGE_213_BW_2[];
@@ -34,8 +30,8 @@ extern const unsigned char IMAGE_213_BWY_BLACK[];
 extern const unsigned char IMAGE_213_BWY_RED[];
 extern const unsigned char IMAGE_213_BWR_BLACK[];
 extern const unsigned char IMAGE_213_BWR_RED[];
-extern const unsigned char IMAGE_BLACK[];
-extern const unsigned char IMAGE_RED[];
+extern const unsigned char IMAGE_BLACK[]; //2.13 inch
+extern const unsigned char IMAGE_RED[];   //2.13 inch
 
 extern const unsigned char IMAGE_260_BW_BLACK[];
 extern const unsigned char IMAGE_260_BW_RED[];
@@ -58,6 +54,10 @@ extern const unsigned char IMAGE_420_BWY_1_RED[];
 extern const unsigned char IMAGE_420_BW_1[];
 extern const unsigned char IMAGE_420_BW_2[];
 
+/*!
+ *If you need to use the following two sizes of EPD, please do not use Arduino UNO
+ */
+#ifndef USE_UNO
 extern const unsigned char IMAGE_583_BWR[];
 extern const unsigned char IMAGE_583_BW_1[];
 extern const unsigned char IMAGE_583_BW_2[];
@@ -66,12 +66,7 @@ extern const unsigned char IMAGE_583_BWY[];
 extern const unsigned char IMAGE_750_BWR[];
 extern const unsigned char IMAGE_750_BWY[];
 extern const unsigned char IMAGE_750_BW[];
-
-
-extern const unsigned char IMAGE_BLACK_1[];
-extern const unsigned char IMAGE_RED_1[];
-
-
+#endif
 
 /* FILE END */
 
