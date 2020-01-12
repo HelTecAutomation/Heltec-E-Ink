@@ -1,7 +1,7 @@
 #ifndef EPDIF_H
 #define EPDIF_H
 
-#include <arduino.h>
+#include <Arduino.h>
 #include <SPI.h>
 #include "imagedata.h"
 
