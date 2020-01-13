@@ -1,6 +1,6 @@
-#define USE_UNO   /*If you need a 5.83-inch or 7.5-inch EPD, avoid using this development board*/
-//#define USE_ESP8266
-//#define USE_ESP32
+// #define USE_UNO   /*If you need a 5.83-inch or 7.5-inch EPD, avoid using this development board*/
+// #define USE_ESP8266
+// #define USE_ESP32
 
 extern const unsigned char IMAGE_DATA[];//1.54 inch
 extern const unsigned char IMAGE_DATA1[];//1.54 inch
@@ -57,7 +57,7 @@ extern const unsigned char IMAGE_420_BW_2[];
 /*!
  *If you need to use the following two sizes of EPD, please do not use Arduino UNO
  */
-#ifndef USE_UNO
+#ifndef AVR
 extern const unsigned char IMAGE_583_BWR[];
 extern const unsigned char IMAGE_583_BW_1[];
 extern const unsigned char IMAGE_583_BW_2[];

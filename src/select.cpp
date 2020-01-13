@@ -59,7 +59,7 @@ void Display(void) {
 #elif defined ( USE_420_BW )
     Display_picture(IMAGE_420_BW_1);
 #endif
-#ifndef USE_UNO
+#ifndef AVR
     #if defined ( USE_583_BWR )
         Display_picture( IMAGE_583_BWR );
     #elif defined ( USE_583_BW )

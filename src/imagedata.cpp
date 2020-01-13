@@ -2219,7 +2219,7 @@ const unsigned char IMAGE2[] PROGMEM = {
  *If you need to use the following two sizes of EPD, please do not use Arduino UNO
  *If you need to use the following two sizes of EPD, please shield "#if...#endif" in" imagedata.h"and" imagedata.cpp"files
  */
-#ifndef USE_UNO
+#ifndef AVR
 const unsigned char IMAGE_583_BWR[] PROGMEM= {
 /* 0X00,0X02,0X58,0X02,0XC0,0X01, */
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,

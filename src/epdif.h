@@ -11,6 +11,8 @@
 #define DC_PIN          22
 #define CS_PIN          18
 #define BUSY_PIN        23
+#define CLK_PIN         5
+#define SDI_PIN         27
 
 #elif defined( AVR )
 #define RST_PIN         8
@@ -23,6 +25,8 @@
 #define DC_PIN          4
 #define CS_PIN          15
 #define BUSY_PIN        5
+#define CLK_PIN         14
+#define SDI_PIN         13
 #endif
 
 class EpdIf {

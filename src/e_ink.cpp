@@ -81,16 +81,14 @@ void Epd::Reset(void) {
 
 int Epd::Init(const unsigned char* lut) {
     /* this calls the peripheral hardware interface, see epdif */
-	//Serial.begin(115200);
-	#if defined( USE_ESP32 )
-	SPI.begin(SCK,MISO,MOSI,SS);
-
-	#elif defined( USE_ESP8266 )
-	SPI.pins(SCK,MISO,MOSI,SS);
+	#if defined( ESP32 )
+	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
+	#elif defined( ESP8266 )
+	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 	SPI.begin();
 	#endif
     if (IfInit() != 0) {
-    Serial.print("e-Paper init failed");
+        Serial.print("e-Paper init failed");
 		return -1;
     }
 #if defined ( USE_154_BW_GREEN )
@@ -350,11 +348,11 @@ int Epd::Init(const unsigned char *lut)
 {
 	 /* this calls the peripheral hardware interface, see epdif */
 	//Serial.begin(115200);
-	#if defined( USE_ESP32 )
-	SPI.begin(SCK,MISO,MOSI,SS);
+	#if defined( ESP32 )
+	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 
-	#elif defined( USE_ESP8266 )
-	SPI.pins(SCK,MISO,MOSI,SS);
+	#elif defined( ESP8266 )
+	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 	SPI.begin();
 	#endif
 	if (IfInit() != 0) {
