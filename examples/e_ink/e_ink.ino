@@ -7,8 +7,9 @@
  *
  *Please put the modeled array in the "imagedata.h" and "imagedata.cpp" files
  *In the "Display ()" function in the "select.h" file, modify the array name of the modular array of the corresponding size screen
- *Please select the size of the corresponding screen at "Epd Inch" on the tool menu bar of Arduino 
+ *Please modify the screen size in the "set_inch.h" file on Arduino
  */
+
 
 #include "select.h"
 

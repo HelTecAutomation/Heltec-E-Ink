@@ -6,8 +6,9 @@
 #include <Wire.h>
 #include <SPI.h>
 #include "imagedata.h"
-#define USE_290_BW  
-        /* USE_154_BW_GREEN, USE_154_BW_BLUE, USE_154_BWY, USE_154_BWR_152 
+#include "../examples/e_ink/set_inch.h"
+ //#define USE_290_BWSoft  
+        /* USE_154_BW_GREEN, USE_154_BW_BLUE, USE_154_BWY, USE_154_BWR_152, 
            USE_213_BW, USE_213_BWSoft, USE_213_BWR, USE_213_BWY, 
            USE_260_BW, USE_260_BWR, 
            USE_270_BW, USE_270_BWR, 

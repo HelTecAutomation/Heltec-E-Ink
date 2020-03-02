@@ -2,6 +2,7 @@
 // #define USE_ESP8266
 // #define USE_ESP32
 
+
 extern const unsigned char IMAGE_DATA[];//1.54 inch
 extern const unsigned char IMAGE_DATA1[];//1.54 inch
 extern const unsigned char IMAGE_DATA2[];//1.54 inch
@@ -22,7 +23,7 @@ extern const unsigned char IMAGE_290_BWR_BLACK[];
 extern const unsigned char IMAGE_290_BWR_RED[];
 extern const unsigned char IMAGE_290_BWY_BLACK[];
 extern const unsigned char IMAGE_290_BWY_RED[];
-extern const unsigned char IMAGE_290_BWRou[];
+extern const unsigned char IMAGE_290_BWSoft[];
 
 extern const unsigned char IMAGE_213_BW_1[];
 extern const unsigned char IMAGE_213_BW_2[];
