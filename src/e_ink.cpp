@@ -79,14 +79,15 @@ void Epd::Reset(void) {
 
 #if SPECIAL_SCREEN
 
-int Epd::Init(const unsigned char* lut) {
+int Epd::Init(const unsigned char* lut) 
+{
     /* this calls the peripheral hardware interface, see epdif */
-	#if defined( ESP32 )
+#if defined( ESP32 )
 	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
-	#elif defined( ESP8266 )
+#elif defined( ESP8266 )
 	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 	SPI.begin();
-	#endif
+#endif
     if (IfInit() != 0) {
         Serial.print("e-Paper init failed");
 		return -1;
@@ -348,15 +349,15 @@ int Epd::Init(const unsigned char *lut)
 {
 	 /* this calls the peripheral hardware interface, see epdif */
 	//Serial.begin(115200);
-	#if defined( ESP32 )
+#if defined( ESP32 )
 	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 
-	#elif defined( ESP8266 )
+#elif defined( ESP8266 )
 	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 	SPI.begin();
-	#endif
+#endif
 	if (IfInit() != 0) {
-	Serial.print("e-Paper init failed!");
+	    Serial.print("e-Paper init failed!");
         return -1;
     }
 #if  USE_154
@@ -597,7 +598,7 @@ int Epd::Init(const unsigned char *lut)
 	SendData(0x3c);
 	SendCommand(VCM_DC_SETTING);
 	SendData(0x1e);
-#elif defined ( USE_583_BWY ) || defined ( USE_583_BWR )
+#else //defined ( USE_583_BWY ) || defined ( USE_583_BWR )
 	SendData(0x3a);
 	SendCommand(VCM_DC_SETTING);
 	SendData(0x28);

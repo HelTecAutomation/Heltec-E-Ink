@@ -62,7 +62,7 @@ extern const unsigned char IMAGE_420_BW_2[];
 extern const unsigned char IMAGE_583_BWR[];
 extern const unsigned char IMAGE_583_BW_1[];
 extern const unsigned char IMAGE_583_BW_2[];
-extern const unsigned char IMAGE_583_BWY[];
+extern const unsigned char IMAGE_583_THREE_COLORS[];
 
 extern const unsigned char IMAGE_750_BWR[];
 extern const unsigned char IMAGE_750_BWY[];

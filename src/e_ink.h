@@ -6,8 +6,9 @@
 #include <Wire.h>
 #include <SPI.h>
 #include "imagedata.h"
-#include "../examples/e_ink/set_inch.h"
- //#define USE_290_BWSoft  
+//#include "../examples/e_ink/set_inch.h"
+
+ #define USE_290_BW  
         /* USE_154_BW_GREEN, USE_154_BW_BLUE, USE_154_BWY, USE_154_BWR_152, 
            USE_213_BW, USE_213_BWSoft, USE_213_BWR, USE_213_BWY, 
            USE_260_BW, USE_260_BWR, 
@@ -33,6 +34,11 @@
 #define USE_420 defined ( USE_420_BWR ) || defined ( USE_420_BWY ) || \
                 defined ( USE_420_BW )
 /* 5.83 inch screen  BW and BWY and BWR */
+#ifdef USE_583_BWR /* preprocess the code to  merge the three colors */
+#undef USE_583_BWR
+#define USE_583_BWY
+#define USE_583_THREE_COLORS
+#endif
 #define USE_583 defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
                 defined ( USE_583_BWR )
 /* 7.5 inch screen  BW and BWY and BWR */

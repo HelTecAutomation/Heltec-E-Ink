@@ -51,7 +51,7 @@ void Display(void) {
 #elif defined ( USE_290_BWY )
     Display_picture(IMAGE_290_BWY_BLACK,IMAGE_290_BWY_RED);
 #elif defined ( USE_290_BWSoft )
-    Display_picture(IMAGE_290_BWSoft);
+    Display_picture(gImage_IMAGE);
 #elif defined ( USE_420_BWR )
     Display_picture(IMAGE_420_BWR_BLACK,IMAGE_420_BWR_RED);
 #elif defined ( USE_420_BWY )
@@ -60,10 +60,10 @@ void Display(void) {
     Display_picture(IMAGE_420_BW_1);
 #endif
 #ifndef AVR
-    #if defined ( USE_583_BWR )
-        Display_picture( IMAGE_583_BWR );
-    #elif defined ( USE_583_BW )
-        Display_picture( IMAGE_583_BW_1 );
+    #if defined ( USE_583_THREE_COLORS )
+        Display_picture( IMAGE_583_THREE_COLORS );
+    // #elif defined ( USE_583_BW )
+    //     Display_picture( IMAGE_583_BW_1 );
     #elif defined ( USE_583_BWY )
         Display_picture( IMAGE_583_BWY );
     #elif defined ( USE_750_BWR )

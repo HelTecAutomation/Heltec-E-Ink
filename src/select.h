@@ -16,8 +16,8 @@ void Display_String(int width, int Heigh, int TextX, int TextY, const char* text
     defined ( USE_270_BWR ) || defined ( USE_290_BWR ) || defined ( USE_290_BWY ) || \
     defined ( USE_420_BWR ) || defined ( USE_420_BWY )
 void Display_picture(const unsigned char* IMAGE_BLACK,const unsigned char* IMAGE_RED);
-#elif   defined ( USE_213_BWSoft ) || defined ( USE_583_BW ) || defined ( USE_583_BWR ) || \
-        defined ( USE_583_BWY ) || defined ( USE_750_BWR ) || defined ( USE_750_BWY ) || \
+#elif   defined ( USE_213_BWSoft ) || defined ( USE_583_BW ) || defined ( USE_583_THREE_COLORS ) || \
+        defined ( USE_750_BWR ) || defined ( USE_750_BWY ) || \
         defined ( USE_750_BW  ) || defined ( USE_270_BW ) || defined ( USE_290_BWSoft ) || \
         defined ( USE_420_BW ) || defined ( USE_213_BW ) || defined ( USE_260_BW )
 void Display_picture(const unsigned char* IMAGE_BLACK);
