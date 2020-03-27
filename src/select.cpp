@@ -53,19 +53,19 @@ void Display(void) {
 #elif defined ( USE_290_BWSoft )
     Display_picture(gImage_IMAGE);
 #elif defined ( USE_420_BWR )
-    Display_picture(IMAGE_420_BWR_BLACK,IMAGE_420_BWR_RED);
+    Display_picture(IMAGE_420_BWY_1_BLACK,IMAGE_420_BWY_1_RED);
 #elif defined ( USE_420_BWY )
     Display_picture(IMAGE_420_BWY_1_BLACK,IMAGE_420_BWY_1_RED);
 #elif defined ( USE_420_BW )
     Display_picture(IMAGE_420_BW_1);
 #endif
 #ifndef AVR
-    #if defined ( USE_583_THREE_COLORS )
+    #if defined ( USE_583_THREE_COLORS )//5.83 inch three colors
         Display_picture( IMAGE_583_THREE_COLORS );
     // #elif defined ( USE_583_BW )
     //     Display_picture( IMAGE_583_BW_1 );
-    #elif defined ( USE_583_BWY )
-        Display_picture( IMAGE_583_BWY );
+    //#elif defined ( USE_583_BWY )
+    //    Display_picture( IMAGE_583_BWY );
     #elif defined ( USE_750_BWR )
         Display_picture( IMAGE_750_BWR );
     #elif defined ( USE_750_BWY )
@@ -81,9 +81,8 @@ void Display_clear() {
     defined ( USE_290_BWR ) || defined ( USE_420_BW  ) || defined ( USE_420_BWR ) || \
     defined ( USE_420_BWY ) || defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 ) || \
     defined (  USE_213_BWR  ) || defined ( USE_213_BWY ) || defined ( USE_213_BWSoft ) || \
-    defined ( USE_213_BW ) || defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
-    defined ( USE_583_BWR ) || defined ( USE_750_BW ) || defined ( USE_750_BWR ) || \
-    defined ( USE_750_BWY )
+    defined ( USE_213_BW ) || defined ( USE_583_BW ) || defined ( USE_583_THREE_COLORS ) || \
+    defined ( USE_750_BW ) || defined ( USE_750_BWR ) ||  defined ( USE_750_BWY )
 	epd.ClearFrame();
 #elif defined ( USE_154_BW_GREEN ) || defined ( USE_290_BW ) || \
       defined ( USE_154_BW_BLUE )
@@ -104,10 +103,10 @@ void Display_clear() {
 void Display_picture(const unsigned char* IMAGE_BLACK,const unsigned char* IMAGE_RED) {
     epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
 }
-#elif   defined ( USE_213_BWSoft ) || defined ( USE_583_BW ) || defined ( USE_583_BWR ) || \
-        defined ( USE_583_BWY ) || defined ( USE_750_BWR ) || defined ( USE_750_BWY ) || \
-        defined ( USE_750_BW  ) || defined ( USE_270_BW ) || defined ( USE_290_BWSoft ) || \
-        defined ( USE_420_BW ) || defined ( USE_213_BW ) || defined ( USE_260_BW )
+#elif   defined ( USE_213_BWSoft ) || defined ( USE_583_BW ) || defined ( USE_583_THREE_COLORS ) || \
+        defined ( USE_750_BWR ) || defined ( USE_750_BWY ) || defined ( USE_750_BW  ) || \
+         defined ( USE_270_BW ) || defined ( USE_290_BWSoft ) ||  defined ( USE_420_BW ) || \
+         defined ( USE_213_BW ) || defined ( USE_260_BW )
 void Display_picture(const unsigned char* IMAGE_BLACK) {
     epd.DisplayFrame(IMAGE_BLACK);
 }

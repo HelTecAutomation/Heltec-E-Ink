@@ -61,7 +61,7 @@ const unsigned char lut_full_update[] = {
 //#endif
 };
 
-const unsigned char lut_partial_update[] PROGMEM= {
+const unsigned char lut_partial_update[] = {
     0x10, 0x18, 0x18, 0x08, 0x18, 0x18,
     0x08, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -76,9 +76,8 @@ const unsigned char lut_partial_update[] PROGMEM= {
         defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 ) || \
         defined (  USE_213_BWR  ) || defined ( USE_213_BWY ) || \
         defined ( USE_213_BWSoft ) || defined ( USE_213_BW ) || \
-        defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
-        defined ( USE_583_BWR ) || defined ( USE_750_BW ) || \
-        defined ( USE_750_BWR ) || defined ( USE_750_BWY )
+        defined ( USE_583_BW ) || defined ( USE_583_THREE_COLORS ) || \
+        defined ( USE_750_BW ) || defined ( USE_750_BWR ) || defined ( USE_750_BWY )
 const unsigned char lut_full_update[30] PROGMEM= {
 };
 #endif

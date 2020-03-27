@@ -6,8 +6,11 @@
 #include <Wire.h>
 #include <SPI.h>
 #include "imagedata.h"
-//#include "../examples/e_ink/set_inch.h"
 
+/**
+ *
+ *Please select a screen macro definition
+ */
  #define USE_290_BW  
         /* USE_154_BW_GREEN, USE_154_BW_BLUE, USE_154_BWY, USE_154_BWR_152, 
            USE_213_BW, USE_213_BWSoft, USE_213_BWR, USE_213_BWY, 
@@ -34,13 +37,12 @@
 #define USE_420 defined ( USE_420_BWR ) || defined ( USE_420_BWY ) || \
                 defined ( USE_420_BW )
 /* 5.83 inch screen  BW and BWY and BWR */
-#ifdef USE_583_BWR /* preprocess the code to  merge the three colors */
-#undef USE_583_BWR
-#define USE_583_BWY
+#if defined (USE_583_BWR) || defined (USE_583_BWY)/* preprocess the code to  merge the three colors */
+// #undef USE_583_BWR
+// #define USE_583_BWY
 #define USE_583_THREE_COLORS
 #endif
-#define USE_583 defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
-                defined ( USE_583_BWR )
+#define USE_583 defined ( USE_583_BW ) || defined (USE_583_THREE_COLORS)
 /* 7.5 inch screen  BW and BWY and BWR */
 #define USE_750 defined ( USE_750_BW ) || defined ( USE_750_BWR ) || \
                 defined ( USE_750_BWY )
@@ -57,9 +59,9 @@
                          defined ( USE_154_BWY ) || defined ( USE_154_BWR_152 ) || \
                          defined (  USE_213_BWR  ) || defined ( USE_213_BWY ) || \
                          defined ( USE_213_BWSoft ) || defined ( USE_213_BW ) || \
-                         defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
-                         defined ( USE_583_BWR ) || defined ( USE_750_BW ) || \
-                         defined ( USE_750_BWR ) || defined ( USE_750_BWY )
+                         defined ( USE_583_BW ) ||  defined ( USE_583_THREE_COLORS ) || \
+                         defined ( USE_750_BW ) ||  defined ( USE_750_BWR ) || \
+                         defined ( USE_750_BWY )
 
 /* Select screen size */
 #if defined ( USE_154_BW_GREEN ) ||  defined ( USE_154_BW_BLUE )
@@ -203,14 +205,13 @@ public:
     int  Init(const unsigned char* lut);
     void SendCommand(unsigned char command);
     void SendData(unsigned char data);
+    void WaitUntilIdle(void);
+    void Reset(void);
+public:
+    /*2.9 inch white and black. Used for partial display*/
     void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
     void SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
     void SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
-    void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
-    void DisplayFrame(const unsigned char* frame_buffer_black);
-    void DisplayFrame(void);
-    void ClearFrame(void);
-    void WaitUntilIdle(void);
     void SetFrameMemory(
         const unsigned char* image_buffer,
         int x,
@@ -218,13 +219,21 @@ public:
         int image_width,
         int image_height
     );
+    /*1.54 green lable, 1.54 blue lable, 2.9 inch white and black  */
     void SetFrameMemory(const unsigned char* image_buffer);
     void ClearFrameMemory(unsigned char color);
-    void Reset(void);
-    
-    void RefreshPartial(int x, int y, int w, int l);
+    void DisplayFrame(void);
+
     void Sleep(void);
-protected:
+public:
+    /* Screens of all sizes except those mentioned above */
+    void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
+    void DisplayFrame(const unsigned char* frame_buffer_black);
+    void ClearFrame(void);
+    
+    // void RefreshPartial(int x, int y, int w, int l);
+private:
+/*2.9 inch white and black*/
     void SetMemoryArea(int x_start, int y_start, int x_end, int y_end);
     void SetMemoryPointer(int x, int y);
 
@@ -242,10 +251,10 @@ private:
     void setSPIFrequency(uint32_t frequency);
     void SetLut(void);
     void SetLut(const unsigned char* lut);
-#if USE_154
+// #if USE_154
     void SetLutBw(void);
     void SetLutRed(void);
-#endif
+// #endif
 };
 extern Epd epd;
 #endif

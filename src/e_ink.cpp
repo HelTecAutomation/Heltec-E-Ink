@@ -885,12 +885,10 @@ void Epd::DisplayFrame(const unsigned char* frame_buffer_black)
 		SendCommand(DISPLAY_REFRESH);
 	}
 }
-#elif defined ( USE_583_BW ) || defined ( USE_583_BWY ) || \
-	  defined ( USE_583_BWR ) || defined ( USE_750_BW ) || \
-	  defined ( USE_750_BWR ) || defined ( USE_750_BWY )
+#elif defined ( USE_583_BW ) || defined ( USE_583_THREE_COLORS ) || \
+	  defined ( USE_750_BW ) || defined ( USE_750_BWR ) || defined ( USE_750_BWY )
 
-#if defined ( USE_583_BWY ) || defined ( USE_583_BWR ) || \
-	defined ( USE_750_BWR ) || defined ( USE_750_BWY )
+#if defined ( USE_583_THREE_COLORS ) ||  defined ( USE_750_BWR ) || defined ( USE_750_BWY )
 /**
  * @brief: refresh and displays the frame
  */
@@ -988,7 +986,7 @@ void Epd::DisplayFrame(const unsigned char *frame_buffer)
  * @brief: clear the frame data from the SRAM, this won't refresh the display
  */
 void Epd::ClearFrame(void) {
-#ifndef USE_583_BWY || USE_583_BWR
+#ifndef USE_583_THREE_COLORS
     SendCommand(DATA_START_TRANSMISSION_1);           
     DelayMs(2);
     for(int i = 0; i < width * height / 8; i++) {
