@@ -186,4 +186,4 @@ void DEPG0290BxS75AFxX::EPD_WhiteScreen_White(void)
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-DEPG0290BxS75AFxX epd296;
+DEPG0290BxS75AFxX epd290;

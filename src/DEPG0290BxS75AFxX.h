@@ -40,5 +40,5 @@ class DEPG0290BxS75AFxX:EpdIf {
 };
 
 
-extern DEPG0290BxS75AFxX epd296;
+extern DEPG0290BxS75AFxX epd290;
 #endif
