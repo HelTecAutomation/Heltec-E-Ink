@@ -8,7 +8,7 @@ void setup() {
     Serial.begin(115200);
     epd290bw.EPD_Init(); //Electronic paper initialization
     epd290bw.EPD_ALL_image(gImage_290image_bw);	//Refresh the picture in full screen
-    epd290bw.EPD_DeepSleep();  //Enter deep sleep	
+    // epd290bw.EPD_DeepSleep();  //Enter deep sleep	
 }
 void loop() {
 

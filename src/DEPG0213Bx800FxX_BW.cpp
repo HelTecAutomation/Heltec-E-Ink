@@ -54,7 +54,6 @@ void DEPG0213Bx800FxX_BW::Reset(void) {
 
 void DEPG0213Bx800FxX_BW::EPD_Init(void) {
     /* this calls the peripheral hardware interface, see epdif */
-    //Serial.begin(115200);
 #if defined( ESP32 )
 	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 
@@ -66,9 +65,7 @@ void DEPG0213Bx800FxX_BW::EPD_Init(void) {
 		Serial.print("e-Paper init failed");
 		return;
 	}
-    // DelayMs(100);
-    // DelayMs(10);
-	// Reset();
+	Reset();
 	WaitUntilIdle();
     SendCommand(0x12); // soft reset
     WaitUntilIdle();
@@ -99,7 +96,7 @@ void DEPG0213Bx800FxX_BW::EPD_ALL_image(const unsigned char *datas) {
 void DEPG0213Bx800FxX_BW::EPD_Update(void) {     			
     SendCommand(0x20);
     WaitUntilIdle();
-    DelayMs(100);   
+    // DelayMs(100);   
 }
 
 void DEPG0213Bx800FxX_BW::EPD_DeepSleep(void) {  	
