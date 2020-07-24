@@ -1,5 +1,5 @@
-#ifndef __EPD_213_H__
-#define __EPD_213_H__
+#ifndef __DEPG0290BxS75AFxX_BW_H__
+#define __DEPG0290BxS75AFxX_BW_H__
 #include "epdif.h"
 
 //250*122///////////////////////////////////////
@@ -20,7 +20,7 @@ class DEPG0290BxS75AFxX:EpdIf {
         void WaitUntilIdle(void);
         void Reset(void);
     public:
-        void EPD_HW_Init(void); //Electronic paper initialization
+        void EPD_Init(void); //Electronic paper initialization
         void EPD_Update(void);
             
         void EPD_WhiteScreen_Black(void);
@@ -40,5 +40,5 @@ class DEPG0290BxS75AFxX:EpdIf {
 };
 
 
-extern DEPG0290BxS75AFxX epd290;
+extern DEPG0290BxS75AFxX epd290bw;
 #endif
