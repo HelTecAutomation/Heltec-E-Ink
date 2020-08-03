@@ -51,7 +51,7 @@ void Display(void) {
 #elif defined ( USE_290_BWY )
     Display_picture(IMAGE_290_BWY_BLACK,IMAGE_290_BWY_RED);
 #elif defined ( USE_290_BWSoft )
-    Display_picture(gImage_IMAGE);
+    Display_picture(IMAGE_290_BWSoft);
 #elif defined ( USE_420_BWR )
     Display_picture(IMAGE_420_BWY_1_BLACK,IMAGE_420_BWY_1_RED);
 #elif defined ( USE_420_BWY )
