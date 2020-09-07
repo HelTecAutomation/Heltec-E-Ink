@@ -8,8 +8,6 @@ DEPG0290BxS75AFxX::DEPG0290BxS75AFxX() {
     dc_pin = DC_PIN;
     cs_pin = CS_PIN;
     busy_pin = BUSY_PIN;
-    width = EPD_WIDTH;
-    height = EPD_HEIGHT;
 };
 
 /**
@@ -49,9 +47,7 @@ void DEPG0290BxS75AFxX::Reset(void) {
     DelayMs(100);    
 }
 
-/////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
+/************************************** init ************************************************/
 void DEPG0290BxS75AFxX::EPD_Init(void) {
 /* this calls the peripheral hardware interface, see epdif */
 	//Serial.begin(115200);
@@ -111,7 +107,8 @@ void DEPG0290BxS75AFxX::EPD_Init(void) {
     WaitUntilIdle();
     Serial.println("e-Paper init OK!");	
 }
-//////////////////////////////All screen update////////////////////////////////////////////
+
+/****************************** All screen update *******************************************/
 void DEPG0290BxS75AFxX::EPD_ALL_image(const unsigned char *datas) {
    	unsigned int i;
 
@@ -124,9 +121,7 @@ void DEPG0290BxS75AFxX::EPD_ALL_image(const unsigned char *datas) {
    	EPD_Update();		 
 }
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////
+/********************************* update ***************************************************/
 void DEPG0290BxS75AFxX::EPD_Update(void) {   
     SendCommand(0x21);
     SendData(0x40); 
@@ -138,33 +133,29 @@ void DEPG0290BxS75AFxX::EPD_Update(void) {
     DelayMs(100);   
 }
 
-
-
+/********************************** deep sleep **********************************************/
 void DEPG0290BxS75AFxX::EPD_DeepSleep(void) {  	
   SendCommand(0x10); //enter deep sleep
   SendData(0x01); 
 }
 
-///////////////////////////////////Display All Black//////////////////////////////////////
+/********************************* Display All Black ****************************************/
 void DEPG0290BxS75AFxX::EPD_WhiteScreen_Black(void) {
-   unsigned int i,k;
-    SendCommand(0x24);   //write RAM for black(0)/white (1)
-	for(k=0;k<296;k++) {
-        for(i=0;i<16;i++) {
-            SendData(0x00);
-        }
-    }
-	
-    EPD_Update();
+    EPD_Load_Data(0x00);
 }
 
-///////////////////////////////////Display All White///////////////////////////////////////
+/********************************* Display All White ****************************************/
 void DEPG0290BxS75AFxX::EPD_WhiteScreen_White(void) {
-   unsigned int i,k;
+    EPD_Load_Data(0XFF);
+}
+
+/********************************** Load Data ***********************************************/
+void DEPG0290BxS75AFxX::EPD_Load_Data(unsigned char data) {
+    unsigned int i,k;
     SendCommand(0x24);   //write RAM for black(0)/white (1)
 	for(k=0;k<296;k++) {
         for(i=0;i<16;i++) {
-            SendData(0xff);
+            SendData(data);
         }
     }
 	

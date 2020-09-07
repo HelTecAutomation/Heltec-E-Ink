@@ -8,8 +8,8 @@
 #define ALLSCREEN_GRAGHBYTES	4000
 
 /* Display resolution */
-#define EPD_WIDTH       128
-#define EPD_HEIGHT      296
+// #define EPD_WIDTH       
+// #define EPD_HEIGHT      
 
 class DEPG0213Bx800FxX_BW:EpdIf {
     public:
@@ -19,6 +19,7 @@ class DEPG0213Bx800FxX_BW:EpdIf {
         void SendData(unsigned char data);
         void WaitUntilIdle(void);
         void Reset(void);
+
     public:
         void EPD_Init(void); //Electronic paper initialization
         void EPD_Update(void);
@@ -35,8 +36,8 @@ class DEPG0213Bx800FxX_BW:EpdIf {
         unsigned int cs_pin;
         unsigned int reset_pin;
         unsigned int busy_pin;
-        unsigned int height;
-        unsigned int width;
+
+        void EPD_Load_Data(unsigned char data);
 };
 
 

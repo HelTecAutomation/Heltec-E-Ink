@@ -8,8 +8,8 @@
 #define ALLSCREEN_GRAGHBYTES	4736
 
 /* Display resolution */
-#define EPD_WIDTH       128
-#define EPD_HEIGHT      296
+// #define EPD_WIDTH       
+// #define EPD_HEIGHT      
 
 class DEPG0290BxS75AFxX:EpdIf {
     public:
@@ -37,6 +37,9 @@ class DEPG0290BxS75AFxX:EpdIf {
         unsigned int busy_pin;
         unsigned int height;
         unsigned int width;
+
+        void EPD_Load_Data(unsigned char data);
+
 };
 
 

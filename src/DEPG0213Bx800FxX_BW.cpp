@@ -8,8 +8,6 @@ DEPG0213Bx800FxX_BW::DEPG0213Bx800FxX_BW() {
     dc_pin = DC_PIN;
     cs_pin = CS_PIN;
     busy_pin = BUSY_PIN;
-    width = EPD_WIDTH;
-    height = EPD_HEIGHT;
 };
 
 /**
@@ -49,9 +47,7 @@ void DEPG0213Bx800FxX_BW::Reset(void) {
     DelayMs(100);    
 }
 
-/////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
+/************************************** init ************************************************/
 void DEPG0213Bx800FxX_BW::EPD_Init(void) {
     /* this calls the peripheral hardware interface, see epdif */
 #if defined( ESP32 )
@@ -72,7 +68,8 @@ void DEPG0213Bx800FxX_BW::EPD_Init(void) {
 	
 	Serial.println("e-Paper init OK!");	
 }
-//////////////////////////////All screen update////////////////////////////////////////////
+
+/****************************** All screen update *******************************************/
 void DEPG0213Bx800FxX_BW::EPD_ALL_image(const unsigned char *datas) {
    	unsigned int i;
 
@@ -92,43 +89,32 @@ void DEPG0213Bx800FxX_BW::EPD_ALL_image(const unsigned char *datas) {
    	EPD_Update();		 
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
+/********************************* update ***************************************************/
 void DEPG0213Bx800FxX_BW::EPD_Update(void) {     			
     SendCommand(0x20);
     WaitUntilIdle();
     // DelayMs(100);   
 }
 
+/********************************** deep sleep **********************************************/
 void DEPG0213Bx800FxX_BW::EPD_DeepSleep(void) {  	
     SendCommand(0x10); //enter deep sleep
     SendData(0x01); 
     DelayMs(100); 	
 }
 
-///////////////////////////////////Display All Black//////////////////////////////////////
+/********************************* Display All Black ****************************************/
 void DEPG0213Bx800FxX_BW::EPD_WhiteScreen_Black(void) {
-   unsigned int i,k;
-
-    SendCommand(0x4E);     
-    SendData(0x00);
-
-    SendCommand(0x4F);       
-    SendData(0xf9);
-    SendData(0x00);
-
-    WaitUntilIdle();
-    SendCommand(0x24);   //write RAM for black(0)/white (1)
-
-    for(k=0;k<250;k++) {
-        for(i=0;i<16;i++) {
-            SendData(0x00);
-        }
-    }
-    EPD_Update();
+    EPD_Load_Data(0x00);
 }
 
-///////////////////////////////////Display All White//////////////////////////////////////////////////////
+/********************************* Display All White ****************************************/
 void DEPG0213Bx800FxX_BW::EPD_WhiteScreen_White(void) {
+    EPD_Load_Data(0xff);
+}
+
+/********************************** Load Data ***********************************************/
+void DEPG0213Bx800FxX_BW::EPD_Load_Data(unsigned char data) {
    unsigned int i,k;
     SendCommand(0x4E);     
     SendData(0x00);
@@ -142,11 +128,12 @@ void DEPG0213Bx800FxX_BW::EPD_WhiteScreen_White(void) {
 
     for(k=0;k<250;k++) {
         for(i=0;i<16;i++) {
-            SendData(0xff);
+            SendData(data);
         }
     }
     EPD_Update();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
 DEPG0213Bx800FxX_BW epd213bw;
+
+/* DEPG0213Bx800FxX_BW END */
