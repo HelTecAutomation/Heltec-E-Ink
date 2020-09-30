@@ -98,7 +98,7 @@ void QYEG0213RWS800::EPD_HW_Init(void)
 	SendCommand(0x3C); //BorderWavefrom
 	SendData(0x01);	
 
-  	SendCommand(0x18); 
+  SendCommand(0x18); 
 	SendData(0x80);	
 
 	SendCommand(0x4E);   // set RAM x address count to 0;
