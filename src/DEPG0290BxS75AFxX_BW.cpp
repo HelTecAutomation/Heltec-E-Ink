@@ -1,45 +1,5 @@
 #include "DEPG0290BxS75AFxX_BW.h"
 
-DEPG0290BxS75AFxX::~DEPG0290BxS75AFxX() {
-};
-
-/**
- *  @brief: basic function for sending commands
- */
-void DEPG0290BxS75AFxX::SendCommand(unsigned char command) {
-    DigitalWrite(dc_pin, LOW);
-    SpiTransfer(command);
-}
-
-/**
- *  @brief: basic function for sending data
- */
-void DEPG0290BxS75AFxX::SendData(unsigned char data) {
-    DigitalWrite(dc_pin, HIGH);
-    SpiTransfer(data);
-}
-
-/**
- *  @brief: Wait until the busy_pin goes LOW
- */
-void DEPG0290BxS75AFxX::WaitUntilIdle(void) {
-    while(DigitalRead(busy_pin) == HIGH) {      //LOW: idle, HIGH: busy
-        DelayMs(100);
-    }      
-}
-
-/**
- *  @brief: module reset.
- *          often used to awaken the module in deep sleep,
- *          see Epd::Sleep();
- */
-void DEPG0290BxS75AFxX::Reset(void) {
-    DigitalWrite(reset_pin, LOW);                //module reset    
-    DelayMs(100);
-    DigitalWrite(reset_pin, HIGH);
-    DelayMs(100);    
-}
-
 /************************************** init ************************************************/
 void DEPG0290BxS75AFxX::EPD_Init(void) {
 /* this calls the peripheral hardware interface, see epdif */

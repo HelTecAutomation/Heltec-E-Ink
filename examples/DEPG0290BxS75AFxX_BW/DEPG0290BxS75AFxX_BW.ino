@@ -24,6 +24,7 @@ Display Resolution 128(H)×296(V)
     #define CS_PIN          15
     #define BUSY_PIN        5
     #define CLK_PIN         14
+    
     DEPG0290BxS75AFxX epd290bw(RST_PIN, DC_PIN, CS_PIN, BUSY_PIN, CLK_PIN);//reset_pin, dc_pin, cs_pin, busy_pin, clk_pin
 #elif defined ( AVR )
     #define RST_PIN         8
