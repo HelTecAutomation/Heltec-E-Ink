@@ -7,6 +7,8 @@
 #include <pgmspace.h>
 #elif defined( AVR )
 #include <avr/pgmspace.h>
+#elif defined( CubeCell_Board )
+#include <pgmspace.h>
 #endif
 
 

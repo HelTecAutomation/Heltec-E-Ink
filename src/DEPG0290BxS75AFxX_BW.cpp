@@ -56,12 +56,14 @@ void DEPG0290BxS75AFxX::EPD_Init(void) {
 #elif defined( ESP8266 )
 	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
 	SPI.begin();
+#elif defined( CubeCell_Board )//AB01
+    SPI.begin(CS_PIN, 2000000, SPI_NUM_0);
 #endif
 	if (IfInit() != 0) {
 		Serial.print("e-Paper init failed");
 		return;
 	}
-	// Reset();
+	Reset();
     WaitUntilIdle();
     SendCommand(0x12); // soft reset
     WaitUntilIdle();

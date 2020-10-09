@@ -27,6 +27,12 @@
 #define BUSY_PIN        5
 #define CLK_PIN         14
 #define SDI_PIN         13
+
+#elif defined( CubeCell_Board )//AB01
+#define RST_PIN         GPIO1
+#define DC_PIN          GPIO2
+#define CS_PIN          GPIO3
+#define BUSY_PIN        GPIO5
 #endif
 
 class EpdIf {
