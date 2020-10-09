@@ -1,60 +1,13 @@
 #include "DEPG0213Bx800FxX_BW.h"
 
-DEPG0213Bx800FxX_BW::~DEPG0213Bx800FxX_BW() {
-};
-
-DEPG0213Bx800FxX_BW::DEPG0213Bx800FxX_BW() {
-    reset_pin = RST_PIN;
-    dc_pin = DC_PIN;
-    cs_pin = CS_PIN;
-    busy_pin = BUSY_PIN;
-};
-
-/**
- *  @brief: basic function for sending commands
- */
-void DEPG0213Bx800FxX_BW::SendCommand(unsigned char command) {
-    DigitalWrite(dc_pin, LOW);
-    SpiTransfer(command);
-}
-
-/**
- *  @brief: basic function for sending data
- */
-void DEPG0213Bx800FxX_BW::SendData(unsigned char data) {
-    DigitalWrite(dc_pin, HIGH);
-    SpiTransfer(data);
-}
-
-/**
- *  @brief: Wait until the busy_pin goes LOW
- */
-void DEPG0213Bx800FxX_BW::WaitUntilIdle(void) {
-    while(DigitalRead(busy_pin) == HIGH) {      //LOW: idle, HIGH: busy
-        DelayMs(100);
-    }
-}
-
-/**
- *  @brief: module reset.
- *          often used to awaken the module in deep sleep,
- *          see Epd::Sleep();
- */
-void DEPG0213Bx800FxX_BW::Reset(void) {
-    DigitalWrite(reset_pin, LOW);                //module reset    
-    DelayMs(100);
-    DigitalWrite(reset_pin, HIGH);
-    DelayMs(100);    
-}
-
 /************************************** init ************************************************/
 void DEPG0213Bx800FxX_BW::EPD_Init(void) {
     /* this calls the peripheral hardware interface, see epdif */
 #if defined( ESP32 )
-	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
+	SPI.begin(this->clk_pin,MISO,MOSI, this->cs_pin);
 
 #elif defined( ESP8266 )
-	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
+	SPI.pins(this->clk_pin,MISO,MOSI, this->cs_pin);
 	SPI.begin();
 #endif
 	if (IfInit() != 0) {
@@ -133,7 +86,5 @@ void DEPG0213Bx800FxX_BW::EPD_Load_Data(unsigned char data) {
     }
     EPD_Update();
 }
-
-DEPG0213Bx800FxX_BW epd213bw;
 
 /* DEPG0213Bx800FxX_BW END */

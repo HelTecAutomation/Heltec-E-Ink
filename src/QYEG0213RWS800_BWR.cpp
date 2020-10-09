@@ -1,68 +1,20 @@
-#include "QYEG0213RWS800.h"
+#include "QYEG0213RWS800_BWR.h"
 
-QYEG0213RWS800::~QYEG0213RWS800() {
-};
-
-QYEG0213RWS800::QYEG0213RWS800() {
-    reset_pin = RST_PIN;
-    dc_pin = DC_PIN;
-    cs_pin = CS_PIN;
-    busy_pin = BUSY_PIN;
-    width = EPD_WIDTH;
-    height = EPD_HEIGHT;
-};
-
-/**
- *  @brief: basic function for sending commands
- */
-void QYEG0213RWS800::SendCommand(unsigned char command) {
-    DigitalWrite(dc_pin, LOW);
-    SpiTransfer(command);
-}
-
-/**
- *  @brief: basic function for sending data
- */
-void QYEG0213RWS800::SendData(unsigned char data) {
-    DigitalWrite(dc_pin, HIGH);
-    SpiTransfer(data);
-}
-
-/**
- *  @brief: Wait until the busy_pin goes LOW
- */
-void QYEG0213RWS800::WaitUntilIdle(void) {
-    while(DigitalRead(busy_pin) == HIGH) {      //LOW: idle, HIGH: busy
-        DelayMs(100);
-    }      
-}
-
-/**
- *  @brief: module reset.
- *          often used to awaken the module in deep sleep,
- *          see Epd::Sleep();
- */
-void QYEG0213RWS800::Reset(void) {
-    DigitalWrite(reset_pin, LOW);                //module reset    
-    DelayMs(100);
-    DigitalWrite(reset_pin, HIGH);
-    DelayMs(100);    
-}
-
-/////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-void QYEG0213RWS800::EPD_HW_Init(void)
+void QYEG0213RWS800_BWR::EPD_HW_Init(void)
 {
-		 /* this calls the peripheral hardware interface, see epdif */
+	/* this calls the peripheral hardware interface, see epdif */
 	//Serial.begin(115200);
 #if defined( ESP32 )
-	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
-
+	SPI.begin(this->clk_pin, MISO,MOSI, this->cs_pin);
 #elif defined( ESP8266 )
-	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
+	SPI.pins(this->clk_pin, MISO, MOSI, this->cs_pin);
 	SPI.begin();
+#elif defined( CubeCell_Board )//AB01
+	SPI.begin(this->cs_pin, this->freq, this->spi_num);
 #endif
+
 	if (IfInit() != 0) {
 		Serial.print("e-Paper init failed");
 		return;
@@ -110,8 +62,9 @@ void QYEG0213RWS800::EPD_HW_Init(void)
 	WaitUntilIdle();
 	Serial.println("e-Paper init OK!");	
 }
+
 //////////////////////////////All screen update////////////////////////////////////////////
-void QYEG0213RWS800::EPD_ALL_image(const unsigned char *datas1,const unsigned char *datas2)
+void QYEG0213RWS800_BWR::EPD_ALL_image(const unsigned char *datas1,const unsigned char *datas2)
 {
    	unsigned int i;
     SendCommand(0x24);   //write RAM for black(0)/white (1)
@@ -127,10 +80,8 @@ void QYEG0213RWS800::EPD_ALL_image(const unsigned char *datas1,const unsigned ch
    	EPD_Update();		 
 }
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////
-void QYEG0213RWS800::EPD_Update(void)
+void QYEG0213RWS800_BWR::EPD_Update(void)
 {   
 	SendCommand(0x22); 
 	SendData(0xF7);   
@@ -139,19 +90,14 @@ void QYEG0213RWS800::EPD_Update(void)
 	// WaitUntilIdle();   
 }
 
-
-
-void QYEG0213RWS800::EPD_DeepSleep(void)
+void QYEG0213RWS800_BWR::EPD_DeepSleep(void)
 {  	
   SendCommand(0x10); //enter deep sleep
   SendData(0x01); 
 }
 
-
-
 /////////////////////////////////Single display////////////////////////////////////////////////
-void QYEG0213RWS800::EPD_WhiteScreen_Red(void)
-
+void QYEG0213RWS800_BWR::EPD_WhiteScreen_Red(void)
 {
    unsigned int i,k;
     SendCommand(0x24);   //write RAM for black(0)/white (1)
@@ -177,7 +123,7 @@ void QYEG0213RWS800::EPD_WhiteScreen_Red(void)
 
 
 
-void QYEG0213RWS800::EPD_WhiteScreen_Black(void)
+void QYEG0213RWS800_BWR::EPD_WhiteScreen_Black(void)
 
 {
    unsigned int i,k;
@@ -205,7 +151,7 @@ void QYEG0213RWS800::EPD_WhiteScreen_Black(void)
 
 
 
-void QYEG0213RWS800::EPD_WhiteScreen_White(void)
+void QYEG0213RWS800_BWR::EPD_WhiteScreen_White(void)
 
 {
    unsigned int i,k;
@@ -232,7 +178,7 @@ void QYEG0213RWS800::EPD_WhiteScreen_White(void)
 
 
 ///////////////////////////Part update//////////////////////////////////////////////
-void QYEG0213RWS800::EPD_Dis_Part(unsigned int x_start,unsigned int y_start,const unsigned char * datas,const unsigned char color_mode,unsigned int PART_COLUMN,unsigned int PART_LINE)
+void QYEG0213RWS800_BWR::EPD_Dis_Part(unsigned int x_start,unsigned int y_start,const unsigned char * datas,const unsigned char color_mode,unsigned int PART_COLUMN,unsigned int PART_LINE)
 {
 	unsigned int i; 
 	unsigned int x_end,y_start1,y_start2,y_end1,y_end2;
@@ -289,7 +235,7 @@ void QYEG0213RWS800::EPD_Dis_Part(unsigned int x_start,unsigned int y_start,cons
 
 
 
-void QYEG0213RWS800::EPD_Dis_Part_mult(unsigned int x_startA,unsigned int y_startA,const unsigned char * datasA1,const unsigned char * datasA2,
+void QYEG0213RWS800_BWR::EPD_Dis_Part_mult(unsigned int x_startA,unsigned int y_startA,const unsigned char * datasA1,const unsigned char * datasA2,
 	                     unsigned int x_startB,unsigned int y_startB,const unsigned char * datasB1,const unsigned char * datasB2,
 											 unsigned int PART_COLUMN,unsigned int PART_LINE)
 {
@@ -396,5 +342,5 @@ void QYEG0213RWS800::EPD_Dis_Part_mult(unsigned int x_startA,unsigned int y_star
 	 EPD_Update();
 
 }
-//////////////////////////////////////////////////////////////////////////////////////
-QYEG0213RWS800 epd213;
+
+/*QYEG0213RWS800_BWR.cpp END*/

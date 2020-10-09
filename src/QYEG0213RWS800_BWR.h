@@ -1,6 +1,6 @@
 #ifndef __EPD_213_H__
 #define __EPD_213_H__
-#include "epdif.h"
+#include "EpdBase.h"
 
 //250*122///////////////////////////////////////
 
@@ -14,14 +14,13 @@
 #define EPD_WIDTH       122
 #define EPD_HEIGHT      250
 
-class QYEG0213RWS800:EpdIf {
+class QYEG0213RWS800_BWR:EpdBase {
     public:
-        QYEG0213RWS800();
-        ~QYEG0213RWS800();
-        void SendCommand(unsigned char command);
-        void SendData(unsigned char data);
-        void WaitUntilIdle(void);
-        void Reset(void);
+        QYEG0213RWS800_BWR(uint8_t _rst, uint8_t _dc, uint8_t _cs,  uint8_t _busy, int8_t _clk=-1, uint8_t _spi_num = 0 ,uint32_t _freq = 2000000): \
+        EpdBase(_rst, _dc, _cs, _busy, _clk, _spi_num, _freq){}
+        
+        ~QYEG0213RWS800_BWR(){}
+
     public:
         void EpaperIO_Init(void);
         void Epaper_READBUSY(void);
@@ -41,15 +40,6 @@ class QYEG0213RWS800:EpdIf {
         void EPD_Dis_Part_mult(unsigned int x_startA,unsigned int y_startA,const unsigned char * datasA1,const unsigned char * datasA2,
                                 unsigned int x_startB,unsigned int y_startB,const unsigned char * datasB1,const unsigned char * datasB2,
                                                     unsigned int PART_COLUMN,unsigned int PART_LINE);
-    private:
-        unsigned int dc_pin;
-        unsigned int cs_pin;
-        unsigned int reset_pin;
-        unsigned int busy_pin;
-        unsigned int height;
-        unsigned int width;
 };
 
-
-extern QYEG0213RWS800 epd213;
 #endif

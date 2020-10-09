@@ -1,6 +1,6 @@
 #ifndef __DEPG0150BxS810FxX_BW_H__
 #define __DEPG0150BxS810FxX_BW_H__
-#include "epdif.h"
+#include "EpdBase.h"
 
 /////////////////////////////////////////
 
@@ -11,35 +11,25 @@
 // #define EPD_WIDTH       
 // #define EPD_HEIGHT      
 
-class DEPG0150BxS810FxX_BW:EpdIf {
+class DEPG0150BxS810FxX_BW:public EpdBase {
     public:
-        DEPG0150BxS810FxX_BW();
-        ~DEPG0150BxS810FxX_BW();
-        void SendCommand(unsigned char command);
-        void SendData(unsigned char data);
-        void WaitUntilIdle(void);
-        void Reset(void);
+        DEPG0150BxS810FxX_BW(uint8_t _rst, uint8_t _dc, uint8_t _cs,  uint8_t _busy, int8_t _clk=-1, uint8_t _spi_num = 0 ,uint32_t _freq = 2000000): \
+        EpdBase(_rst, _dc, _cs, _busy, _clk, _spi_num, _freq){}
+
+        ~DEPG0150BxS810FxX_BW(){}
+
     public:
         void EPD_Init(void); //Electronic paper initialization
-        void EPD_Update(void);
-            
+        void EPD_Update(void);  
         void EPD_DeepSleep(void);
         //Display 
-
         void EPD_ALL_image(const unsigned char *datas);
         void EPD_WhiteScreen_Black(void);
         void EPD_WhiteScreen_White(void);
 
     private:
-        unsigned int dc_pin;
-        unsigned int cs_pin;
-        unsigned int reset_pin;
-        unsigned int busy_pin;
-
         void EPD_Load_Data(unsigned char data);
 
 };
-
-extern DEPG0150BxS810FxX_BW epd154bw;
 
 #endif/** DEPG0150BxS810FxX_BW.h END**/
