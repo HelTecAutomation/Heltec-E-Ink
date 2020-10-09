@@ -3,13 +3,6 @@
 DEPG0290BxS75AFxX::~DEPG0290BxS75AFxX() {
 };
 
-DEPG0290BxS75AFxX::DEPG0290BxS75AFxX() {
-    reset_pin = RST_PIN;
-    dc_pin = DC_PIN;
-    cs_pin = CS_PIN;
-    busy_pin = BUSY_PIN;
-};
-
 /**
  *  @brief: basic function for sending commands
  */
@@ -52,12 +45,12 @@ void DEPG0290BxS75AFxX::EPD_Init(void) {
 /* this calls the peripheral hardware interface, see epdif */
 	//Serial.begin(115200);
 #if defined( ESP32 )
-	SPI.begin(CLK_PIN,MISO,SDI_PIN,CS_PIN);
+	SPI.begin(this->clk_pin, MISO,MOSI, this->cs_pin);
 #elif defined( ESP8266 )
-	SPI.pins(CLK_PIN,MISO,SDI_PIN,CS_PIN);
+	SPI.pins(this->clk_pin, MISO, MOSI, this->cs_pin);
 	SPI.begin();
 #elif defined( CubeCell_Board )//AB01
-    SPI.begin(CS_PIN, 2000000, SPI_NUM_0);
+    SPI.begin(this->cs_pin, this->freq, this->spi_num);
 #endif
 	if (IfInit() != 0) {
 		Serial.print("e-Paper init failed");
@@ -165,4 +158,3 @@ void DEPG0290BxS75AFxX::EPD_Load_Data(unsigned char data) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-DEPG0290BxS75AFxX epd290bw;
