@@ -1394,6 +1394,6 @@ const unsigned char gImage_154image_bw[5000] PROGMEM= { /* 0X01,0X01,0XC8,0X00,0
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,
 
-};  /*  gImage_154image_bw */
+};  /*  gImage_154image_bw END*/
 
 #endif /** picture.h END**/
