@@ -45,7 +45,7 @@ void DEPG0290BxS800FxX_BW::EPD_Update(void) {
 /********************************** deep sleep **********************************************/
 void DEPG0290BxS800FxX_BW::EPD_DeepSleep(void) {  	
   SendCommand(0x10); //enter deep sleep
-  SendData(0x11); 
+  SendData(0x01); 
 }
 
 /********************************* Display All Black ****************************************/
