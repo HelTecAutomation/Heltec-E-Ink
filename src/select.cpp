@@ -62,8 +62,8 @@ void Display(void) {
 #ifndef AVR
     #if defined ( USE_583_THREE_COLORS )//5.83 inch three colors
         Display_picture( IMAGE_583_THREE_COLORS );
-    // #elif defined ( USE_583_BW )
-    //     Display_picture( IMAGE_583_BW_1 );
+    #elif defined ( USE_583_BW )
+         Display_picture( IMAGE_583_BW_1 );
     //#elif defined ( USE_583_BWY )
     //    Display_picture( IMAGE_583_BWY );
     #elif defined ( USE_750_BWR )

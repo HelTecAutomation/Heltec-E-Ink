@@ -593,7 +593,7 @@ int Epd::Init(const unsigned char *lut)
 	SendCommand(0xe5);           //FLASH MODE
 	SendData(0x03);
 	
-	SendCommand(PLL_CONTROL);
+	SendCommand(PLL_CONTROL);//控制刷新速度
 #if defined ( USE_583_BW )
 	SendData(0x3c);
 	SendCommand(VCM_DC_SETTING);

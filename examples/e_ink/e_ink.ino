@@ -19,8 +19,12 @@ void setup()
   pinMode(12,OUTPUT);
   digitalWrite(12,HIGH);
   epd.Init(lut_full_update);
-  Display_clear();
-  Display(); /* The preprocessing function of screen is defined. */
+
+  /* If you can't refresh normally, please comment out and try again */
+  Display_clear(); 
+
+  /* The preprocessing function of screen is defined. */
+  Display(); 
 }
 
 void loop() 
