@@ -47,14 +47,9 @@ void setup() {
 	Serial.begin(115200);
 	epd154bw.EPD_Init(); //Electronic paper initialization
 	epd154bw.EPD_ALL_image(gImage_154image_bw);	//Refresh the picture in full screen
-	
 	delay(1000);
-
   epd154bw.Clear();
-  // epd154bw.DisplayPartBaseImage(gImage_154image_partial_bw_1);
-  // delay(1000);
-  epd154bw.HalLcd_Partial();
-
+  
   pt.SetWidth(200);
   pt.SetHeight(24);
   
@@ -117,10 +112,14 @@ void setup() {
     delay(100);
   }
 
-	// epd154bw.EPD_WhiteScreen_Black();
+  // epd154bw.EPD_Init(); //Electronic paper initialization
+  // epd154bw.EPD_ALL_image(gImage_154image_bw); //Refresh the picture in full screen
 	// delay(1000);
-	// epd154bw.EPD_WhiteScreen_White();
-	// epd154bw.EPD_DeepSleep();  //Enter deep sleep  
+  // epd154bw.Clear();
+  // epd154bw.EPD_WhiteScreen_Black();
+  // delay(1000);
+  // epd154bw.EPD_WhiteScreen_White();
+  // epd154bw.EPD_DeepSleep();  //Enter deep sleep  
 }
 void loop() {
 
