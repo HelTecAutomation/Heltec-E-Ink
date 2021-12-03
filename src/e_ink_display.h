@@ -10,8 +10,10 @@
 // Color inverse. 1 or 0 = set or reset a bit if set a colored pixel
 #define IF_INVERT_COLOR     1
 
-#include "fonts.h"
+#define MAX_QRCODE_VERSION 10
 
+#include "fonts.h"
+#include "qrcodegen.h"
 class Paint {
 public:
     Paint(unsigned char* image, int width, int height);
@@ -35,7 +37,7 @@ public:
     void DrawFilledRectangle(int x0, int y0, int x1, int y1, int colored);
     void DrawCircle(int x, int y, int radius, int colored);
     void DrawFilledCircle(int x, int y, int radius, int colored);
-
+	void DrawQrcode(const int x, const int y,const char *text,const int  graphics_magnification);
 private:
     unsigned char* image;
     int width;
