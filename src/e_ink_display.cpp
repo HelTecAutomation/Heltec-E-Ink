@@ -1,6 +1,7 @@
 #include "e_ink_display.h"
 #include "imagedata.h"
-
+#include "stdlib.h"
+#include "malloc.h"
 #if defined( ESP32 )
 #include <pgmspace.h>
 #elif defined( ESP8266 )
@@ -300,6 +301,82 @@ void Paint::DrawFilledCircle(int x, int y, int radius, int colored) {
         }
     } while(x_pos <= 0);
 }
+
+
+
+void Paint::DrawQrcode(const int x, const int y,const char *text,const int  graphics_magnification) {
+    int border = 2;
+    uint16_t x_begin =x,  y_begin = y;
+    enum qrcodegen_Ecc errCorLvl = qrcodegen_Ecc_LOW;
+    uint8_t *qrcode, *tempBuffer;
+    esp_err_t err = ESP_FAIL;
+
+    qrcode = (uint8_t *)calloc(1, qrcodegen_BUFFER_LEN_FOR_VERSION(MAX_QRCODE_VERSION));
+
+    if (!qrcode) {
+        return ;
+    }
+
+    tempBuffer = (uint8_t *)calloc(1, qrcodegen_BUFFER_LEN_FOR_VERSION(MAX_QRCODE_VERSION));
+
+    if (!tempBuffer) {
+        free(qrcode);
+        return ;
+    }
+
+    // Make and print the QR Code symbol
+    bool ok = qrcodegen_encodeText(text, tempBuffer, qrcode, errCorLvl,
+                                   qrcodegen_VERSION_MIN, MAX_QRCODE_VERSION, qrcodegen_Mask_AUTO, true);
+
+    if (ok) {
+	    err = ESP_OK;
+//        printQr(qrcode);        
+		int size = qrcodegen_getSize(qrcode);
+	    
+//	    this->width = graphics_magnification *(size+4*border );
+//	    this->height = graphics_magnification *(size+4*border );
+//	//	bw_290_part_set_width(graphics_magnification *(size+4*border ));
+//	//	bw_290_part_set_height(graphics_magnification *(size+4*border ));
+//	//	bw_290_part_clear(1);
+//		this->Clear(0);
+		SetWidth(graphics_magnification *(size+4*border ));
+		SetHeight(graphics_magnification *(size+4*border ));
+		this->Clear(1);
+	    for (int y_offset = -border; y_offset < size + border; y_offset += 1) 
+	    {
+	        for (int x_offset = -border; x_offset < size + border; x_offset += 1) 
+	        {
+
+	            if (qrcodegen_getModule(qrcode, x_offset, y_offset)) 
+	            {
+	            	for(int i =0; i<graphics_magnification;i++)
+	            	{
+	            		for(int j =0; j<graphics_magnification; j++)
+	            		{
+							this->DrawPixel(x_begin +graphics_magnification*(x_offset+border)+i ,y_begin+ graphics_magnification*(y_offset+border) +j , 1); 
+	            		}
+	            	}
+	                
+	            }
+	            else
+	            {
+	            	for(int i =0; i<graphics_magnification;i++)
+	            	{
+	            		for(int j =0; j<graphics_magnification; j++)
+	            		{
+							this->DrawPixel(x_begin +graphics_magnification*(x_offset+border)+i ,y_begin+ graphics_magnification*(y_offset+border) +j , 0); 
+	            		}
+	            	}
+	            }
+	        }
+	    }
+	}
+//    printf("end \n");
+    free(qrcode);
+    free(tempBuffer);
+    return ;
+}
+
 
 /* END OF FILE */
 

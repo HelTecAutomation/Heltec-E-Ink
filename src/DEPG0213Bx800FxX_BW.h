@@ -8,8 +8,8 @@
 #define ALLSCREEN_GRAGHBYTES	4000
 
 /* Display resolution */
-// #define EPD_WIDTH       
-// #define EPD_HEIGHT      
+#define EPD_WIDTH_213       122
+#define EPD_HEIGHT_213      250   
 
 class DEPG0213Bx800FxX_BW:public EpdBase {
     public:
@@ -23,11 +23,16 @@ class DEPG0213Bx800FxX_BW:public EpdBase {
         void EPD_WhiteScreen_Black(void);
         void EPD_WhiteScreen_White(void);
         void EPD_DeepSleep(void);
-        //Display 
+        //Display         
+        void Clear(void);
         void EPD_ALL_image(const unsigned char *datas);
-
+        void HalLcd_Partial_Update(void);
+        void SetFrameMemory(const unsigned char* image_buffer,int x,int y,int image_width,int image_height);
+        void ClearFrameMemory(unsigned char color);
     private:
         void EPD_Load_Data(unsigned char data);
+        void SetMemoryArea(int x_start, int y_start, int x_end, int y_end);
+        void SetMemoryPointer(int x, int y);
 };
 
 #endif

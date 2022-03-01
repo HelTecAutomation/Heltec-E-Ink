@@ -6,13 +6,14 @@ Display Resolution 128(H)×296(V)
 #include "picture.h"
 #include "e_ink_display.h"
 
+
 #define UNDEFINED -1
 #ifdef CubeCell_Board //AB01
     #define FREQUENCY 2000000
 
     DEPG0290BxS75AFxX_BW epd290bw(GPIO1, GPIO2, GPIO3, GPIO5, UNDEFINED, SPI_NUM_0, FREQUENCY);//reset_pin, dc_pin, cs_pin, busy_pin, clk_pin, spi_num, frequency
 #elif defined( ESP32 )
-    #define RST_PIN         4
+    #define RST_PIN         25
     #define DC_PIN          13
     #define CS_PIN          15
     #define BUSY_PIN        17
@@ -34,7 +35,7 @@ Display Resolution 128(H)×296(V)
     #define BUSY_PIN        7
 #endif
 
-unsigned char img[1024];
+unsigned char img[1024*5];
 Paint pt(img, 0, 0);
 unsigned long time_start_ms;
 unsigned long time_now_s;
@@ -59,12 +60,9 @@ void setup() {
 
     pt.SetWidth(64);
 	pt.SetHeight(64);
-
 	pt.Clear(UNCOLORED);
-	pt.DrawRectangle(0, 0, 40, 50, COLORED);
-	pt.DrawLine(0, 0, 40, 50, COLORED);
-	pt.DrawLine(40, 0, 0, 50, COLORED);
-	epd290bw.SetFrameMemory(pt.GetImage(), 16, 60, pt.GetWidth(), pt.GetHeight());
+  pt.DrawQrcode(0,0,"https://heltec.org/",4);
+	epd290bw.SetFrameMemory(pt.GetImage(), 10, 10, pt.GetWidth(), pt.GetHeight());
     epd290bw.HalLcd_Partial_Update();
     delay(100);
     epd290bw.EPD_DeepSleep();  //Enter deep sleep	
