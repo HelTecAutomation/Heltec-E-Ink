@@ -1,0 +1,16 @@
+{
+  "name": "Heltec-E-Ink",
+  "keywords": "heltec, esp32, lora, wifi kit, e-ink",
+  "description": "A library for Heltec E-Ink based board",
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/RichardHeltec/Heltec-E-Ink"
+  },
+  "authors":{
+        "name": "Heltec Automation(TM)",
+        "email": "support@heltec.cn"
+   },
+  "version": "1.0.0",
+  "frameworks": "arduino",
+  "platforms": "espressif32"
+}
